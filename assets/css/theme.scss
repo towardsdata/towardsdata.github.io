@@ -4,7 +4,8 @@
 
 $brown: #B59F62;
 $teal: #40FFDC;
-$blue: #346DDB;
+//$blue: #346DDB;
+$blue: #6b97ff;
 $black: #111;
 $bluish-cyan: #257D98;
 $orangy-red: #fa735d;
@@ -33,6 +34,7 @@ body, input, button, select, optgroup, textarea {
 body {
     line-height: 1.7;
     //background: #f4f4f4;
+    //font-family: "Noto Sans Display",Helvetica Neue,Helvetica,Arial,sans-serif;
     background: #fff;
 }
 a {
@@ -141,7 +143,7 @@ img, img:hover {
 // menu
 .navbar-brand img {
     //max-height:90px;
-    max-height: 80px;
+    max-height: 60px;
     //margin-bottom: 10px;
     //margin-top:5px;
     //margin-top: 0;
