@@ -1,0 +1,124 @@
+---
+layout: default
+disqus: false
+archive: false
+post_class: post-template
+---
+
+<div class="entry-header">
+    <!-- Kicker -->
+    {% if page.kicker %}
+        <!--<h6 class="kicker">{{ page.kicker }}</h6>-->
+        <a class="smoothscroll" href="{{ site.baseurl }}/categories#{{ page.kicker | downcase | replace: " ","-" }}"><h6 class="kicker">{{ page.kicker }}</h6></a>
+    {% endif %}
+
+    <!-- Post Title -->
+    <h1 class="posttitle">{{ page.title }}</h1>
+
+    <!-- Author and Date -->
+    {% assign author = site.authors[page.author] %}
+    {% if page.author %}
+    <div class="d-flex align-items-center mt-4">
+        <div>
+            {% if author.avatar %}
+            <img class="author-thumb" src="{{site.baseurl}}/{{ author.avatar }}" alt="{{ author.display_name }}">
+            {% else %}
+            <img class="author-thumb" src="https://www.gravatar.com/avatar/{{ author.gravatar }}?s=250&d=mm&r=x" alt="{{ author.display_name }}">
+            {% endif %}
+        </div>            
+        <div>
+            Written by <b>{{ author.display_name }}</b> on 
+            <span class="post-date"><time class="post-date" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time></span>           
+            {% if page.last_modified_at %}
+            (Updated: <time datetime="{{ page.last_modified_at | date_to_xmlschema }}" itemprop="dateModified">{{ page.last_modified_at | date: "%b %-d, %Y" }}</time>)
+            {% endif %}
+            {% assign words = content | number_of_words %}
+            &nbsp;-&nbsp;{{ words | divided_by:180 }} Mins Read
+        </div>            
+    </div>
+    {% endif %}
+</div>
+
+<!-- Adsense under title if enabled from _config.yml (change your pub id and slot) -->
+<!--{% if site.adsense == "enabled" %}
+    {% include adsense-under-header.html %}
+{% endif %}-->
+
+<!-- Tags -->
+<div class="article-post">
+    <ul class="tags">
+        {% assign sortedTags = page.tags | sort %}
+        {% for tag in sortedTags %}
+        <li>
+            <a class="smoothscroll" href="{{ site.baseurl }}/tags#{{ tag | replace: " ","-" }}">{{ tag }}</a>
+        </li>
+        {% endfor %}
+    </ul>                    
+</div>
+
+<!-- Subtitle -->
+<div class="article-post">
+    {% if page.subtitle %}
+        <p></p>
+        <span style="font-weight: 50;">{{ page.subtitle }}</span>
+    {% endif %}
+    <hr class="grey_line"></hr>
+</div>
+
+<!-- Draft - Shows writing in progress -->
+<div class="article-post">
+    {% if page.draft %}
+        <span style="font-size: 90%; color:#CB4335;"><b>Writing in progress:</b> If you have any suggestions for improving the content or notice any inaccuracies, please email me at <a href="mailto:hello@senthilnayagan.com">hello@senthilnayagan.com</a>. Thanks!</span>        
+    {% endif %}
+</div>
+
+<!-- Featured Image -->
+{% include featured-image.html %}
+
+<!-- Content -->
+{% include article.html %}
+
+<!-- Rating -->
+{% if page.rating %}
+<div class="rating mt-4 mb-4 d-flex align-items-center">
+    <strong class="mr-1">Rating:</strong> {% include star_rating.html %}
+</div>
+{% endif %}
+
+<!-- Author Box if enabled from _config.yml -->
+{% include author-box.html %}
+
+<!-- Comments if not disabled with comments: false -->
+{% include comments.html %}
+
+<!-- Share -->
+{% include share.html %}
+
+<!-- Related Post -->
+{% include related-posts.html %}
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+{% if page.rating %}
+    <script type="application/ld+json">
+    {
+    "@context": "http://schema.org/",
+    "@type": "Review",
+    "itemReviewed": {
+    "@type": "Thing",
+    "name": "{{ page.title }}"
+    },
+    "author": {
+    "@type": "Person",
+    "name": "{{ author.display_name }}"
+    },
+    "datePublished": "{{ page.date | date:"%Y-%m-%d" }}",
+    "reviewRating": {
+    "@type": "Rating",
+    "ratingValue": "{{ page.rating }}",
+    "bestRating": "5"
+    }
+    }
+    </script>
+{% endif %}

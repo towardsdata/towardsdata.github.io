@@ -1,0 +1,47 @@
+What is Gem?
+Gem is a package manager for the Ruby programming language that provides a standard format for distributing Ruby programs and libraries.
+
+How to create a new blog?
+> jekyll new <name-of-the-blog>
+
+How to build the site and make it available on a local server?
+> cd myblog
+> bundle exec jekyll serve
+
+Build the site using one of these commands:
+> jekyll build - Builds the site and outputs a static site to a directory called _site.
+> jekyll serve - It does jekyll build and and runs it on a local web server at http://localhost:4000
+
+How to serve the drafts?
+The draft blogs are kept under /_drafts folder. Use the following command to serve only blogs under this _draft folder.
+> jekyll server --draft
+
+How to install missing gems?
+> bundle install
+
+Note: 
+If we are using Ruby version 3.0.0 or higher, step 5 may fail. We may fix it by adding webrick 
+to your dependencies: bundle add webrick
+---
+rbenv commands:
+rbenv install -l - List all versions of Ruby available, but aren't installed yet in our machine
+rbenv versions - List of the Ruby versions already installed on our machine
+rbenv version - Shows the current version of Ruby
+
+Global version numbers are stored in: ~/.rbenv/versions/
+
+Set the latest version of ruby to be the default version of ruby:
+rbenv global <version>
+
+GitHub for static site generators:
+GitHub Pages will use Jekyll to build your site by default. If you want to use a static site generator 
+other than Jekyll, disable the Jekyll build process by creating an empty file called .nojekyll in 
+the root of your publishing source.
+
+GitHub Pages does not support server-side languages such as PHP, Ruby, or Python.
+
+Liked fonts:
+https://cloudcannon.com/blog/why-the-web-is-turning-away-from-wordpress/
+https://docs.github.com/en/get-started/quickstart/github-flow
+
+Copy URL: https://www.redhat.com/en/topics/automation/what-is-infrastructure-as-code-iac
