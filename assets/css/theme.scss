@@ -13,7 +13,8 @@ $primary: $blue;
 $dark:    $black;
 $author: #90b4ff;
 //$grey-bg: #F8F9F9;
-$grey-bg: #f7f7f7;
+//$grey-bg: #f7f7f7;
+$grey-bg: #f2f2f2;
 $background-color: #f9f9fc;
 $text-color: #17181e;
 
@@ -32,9 +33,10 @@ body, input, button, select, optgroup, textarea {
     color: $text-color;
 }
 body {
-    line-height: 1.7;
-    //background: #f4f4f4;
-    //font-family: "Noto Sans Display",Helvetica Neue,Helvetica,Arial,sans-serif;
+    //line-height: 1.7;
+    line-height: 25.6px;
+    font-size: 16px;
+    font-weight: 400;
     background: #fff;
 }
 a {
