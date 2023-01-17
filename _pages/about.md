@@ -3,8 +3,8 @@ layout: page
 title: Hello there... It's our pleasure to meet you!
 permalink: /about
 comments: false
---image: https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=350
-imageshadow: true
+--image: https://www.libravatar.org/avatar/7ccaded7d8fc7041f5ae55d18184e5fd?d=retro&s=250
+imageshadow: false
 ---
 
 <!-- Home Icon -->

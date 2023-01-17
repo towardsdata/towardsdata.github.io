@@ -5,12 +5,12 @@ description: "In towards data, we delve into a broad variety of data-related con
 logo: 'assets/images/logo_transparent.png'
 favicon: 'assets/images/logo_square_solid.png'
 baseurl: ""
-disqus: 'senthilnayagan'
+disqus: 'towardsdata'
 mailchimp-list: 'https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4'
 include: ["_pages"]
 permalink: /:categories/:year/:title
 email: hello@towardsdata.dev
-contact-me: https://formspree.io/f/xzbwdbnl
+contact-us: https://formspree.io/f/xdovkgjv
 
 # Authors
 authors:

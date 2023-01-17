@@ -15,7 +15,7 @@ $author: #90b4ff;
 //$grey-bg: #F8F9F9;
 //$grey-bg: #f7f7f7;
 $grey-bg: #f2f2f2;
-$background-color: #f9f9fc;
+$background-color: #fff;
 $text-color: #17181e;
 
 $enable-rounded: false;
@@ -26,18 +26,55 @@ $enable-rounded: false;
 @import 'bootstrap/bootstrap';
 @import 'stars';
 
+@font-face {
+    font-family: "Fira Sans";
+    font-weight: 400;
+    font-style: normal;
+    src: url("../fonts/firasans-latin-400-roman.woff2") format('woff2');
+  }
+  @font-face {
+    font-family: "Fira Sans";
+    font-weight: 400;
+    font-style: italic;
+    src: url("../fonts/firasans-latin-400-italic.woff2") format('woff2');
+  }
+  @font-face {
+    font-family: "Fira Sans";
+    font-weight: 700;
+    font-style: normal;
+    src: url("../fonts/firasans-latin-700-roman.woff2") format('woff2');
+  }
+
+  @font-face {
+	font-family: "IBM Plex Mono";
+	font-weight: 400;
+	font-style: normal;
+	src: url("../fonts/ibmplexmono-latin-400-roman.woff2") format('woff2');
+  }
+  @font-face {
+	font-family: "IBM Plex Mono";
+	font-weight: 500;
+	font-style: normal;
+	src: url("../fonts/ibmplexmono-latin-500-roman.woff2") format('woff2');
+  }
+  @font-face {
+	font-family: "IBM Plex Mono";
+	font-weight: 700;
+	font-style: normal;
+	src: url("../fonts/ibmplexmono-latin-700-roman.woff2") format('woff2');
+  }
+  
 
 // general
 body, input, button, select, optgroup, textarea {   
-    font-family: Sen;
+    //font-family: Sen;
+    font-family: "Fira Sans", Sans-fallback;
     color: $text-color;
+    color-scheme: light;
 }
 body {
-    //line-height: 1.7;
-    line-height: 25.6px;
-    font-size: 16px;
-    font-weight: 400;
-    background: #fff;
+    line-height: 1.7;
+    background: $background-color;
 }
 a {
     color: darken($primary, 24%);
@@ -497,8 +534,17 @@ img, img:hover {
         margin-bottom: 30px;
     }
     code {
-        font-size: 15px;
-        color: #e83e8c;
+        //font-size: 18px;
+        //color: #e83e8c;
+        font-family: 'IBM Plex Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        color: rgba(0, 0, 0, 0.7);
+        color-scheme: light;
+        display: inline;
+        //background-color: rgb(242, 242, 242);
+        background-color: #EAEDED;
+        box-sizing: border-box;
+        font-weight: 500;
+        line-height: 20.992px;
     }
     code[class*="language-"], pre[class*="language-"] {
         font-size: 15px;
@@ -656,7 +702,6 @@ body.active-side {
     padding: 30px;
     border-top: 1px solid $gray-200;
     font-size: 15px;
-    //background: #fff;
     background: $grey-bg;
 }
 
@@ -773,7 +818,7 @@ body.active-side {
         font-size: 18px;
     }
     .article-post {
-        font-size: 15px;
+        font-size: 16px;
     }
     .wrap-search {
         .fa-search {
@@ -807,7 +852,9 @@ ul.tags li {
 }
 ul.tags li a {
     align-items: center;
-    background-color: #e8f0fe;
+    //background-color: #e8f0fe;
+    background-color: rgba(76, 73, 203, 0.15);
+    font-family: "Noto Sans Display", Helvetica Neue, Helvetica, Arial, sans-serif;
     border-radius: 5px;
     padding: 5px 5px;
     font-size: small;

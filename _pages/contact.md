@@ -8,7 +8,7 @@ comments: false
 <!-- Home Icon -->
 {% include home-icon.html %}
 
-<form action="{{ site.contact-me }}" method="POST">    
+<form action="{{ site.contact-us }}" method="POST">    
     <p class="mb-4">Please feel free to send your message to us. We will respond as soon as we can.</p>
     <div class="form-group row">
     <div class="col-md-6">
