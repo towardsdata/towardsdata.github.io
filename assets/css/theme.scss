@@ -31,38 +31,38 @@ $enable-rounded: false;
     font-weight: 400;
     font-style: normal;
     src: url("../fonts/firasans-latin-400-roman.woff2") format('woff2');
-  }
-  @font-face {
+}
+@font-face {
     font-family: "Fira Sans";
     font-weight: 400;
     font-style: italic;
     src: url("../fonts/firasans-latin-400-italic.woff2") format('woff2');
-  }
-  @font-face {
+}
+@font-face {
     font-family: "Fira Sans";
     font-weight: 700;
     font-style: normal;
     src: url("../fonts/firasans-latin-700-roman.woff2") format('woff2');
-  }
+}
 
-  @font-face {
-	font-family: "IBM Plex Mono";
-	font-weight: 400;
-	font-style: normal;
-	src: url("../fonts/ibmplexmono-latin-400-roman.woff2") format('woff2');
-  }
-  @font-face {
-	font-family: "IBM Plex Mono";
-	font-weight: 500;
-	font-style: normal;
-	src: url("../fonts/ibmplexmono-latin-500-roman.woff2") format('woff2');
-  }
-  @font-face {
-	font-family: "IBM Plex Mono";
-	font-weight: 700;
-	font-style: normal;
-	src: url("../fonts/ibmplexmono-latin-700-roman.woff2") format('woff2');
-  }
+@font-face {
+    font-family: "IBM Plex Mono";
+    font-weight: 400;
+    font-style: normal;
+    src: url("../fonts/ibmplexmono-latin-400-roman.woff2") format('woff2');
+}
+@font-face {
+    font-family: "IBM Plex Mono";
+    font-weight: 500;
+    font-style: normal;
+    src: url("../fonts/ibmplexmono-latin-500-roman.woff2") format('woff2');
+}
+@font-face {
+    font-family: "IBM Plex Mono";
+    font-weight: 700;
+    font-style: normal;
+    src: url("../fonts/ibmplexmono-latin-700-roman.woff2") format('woff2');
+}
   
 
 // general
@@ -111,7 +111,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 blockquote {
     //padding: 0.75rem 1rem 0.75rem 1rem;
-    font-size: 17px;
+    font-size: 18px;
     //font-style: italic;
     color: rgba(0, 0, 0, .7);
     //background: #fff;
@@ -534,7 +534,6 @@ img, img:hover {
         margin-bottom: 30px;
     }
     code {
-        //font-size: 18px;
         //color: #e83e8c;
         font-family: 'IBM Plex Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
         color: rgba(0, 0, 0, 0.7);
@@ -543,11 +542,11 @@ img, img:hover {
         //background-color: rgb(242, 242, 242);
         background-color: #EAEDED;
         box-sizing: border-box;
-        font-weight: 500;
+        font-weight: 400;
         line-height: 20.992px;
     }
     code[class*="language-"], pre[class*="language-"] {
-        font-size: 15px;
+        font-size: 16px;
         margin-bottom: 30px;
         //background: #fff;
         background: #272822;
@@ -613,7 +612,7 @@ img, img:hover {
     }
     margin-top: 120px;
     .badge {
-        font-size: 15px;
+        font-size: 16px;
         padding: 5px 7px;
         display: inline-block;
         margin: 0 3px;
@@ -818,7 +817,8 @@ body.active-side {
         font-size: 18px;
     }
     .article-post {
-        font-size: 16px;
+        //font-size: 16px;
+        font-size: 18px;
     }
     .wrap-search {
         .fa-search {
