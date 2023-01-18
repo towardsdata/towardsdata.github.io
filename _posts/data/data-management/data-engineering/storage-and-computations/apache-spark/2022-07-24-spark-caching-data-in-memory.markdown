@@ -10,6 +10,7 @@ tags: ["apache-spark", "cache", "data-caching"]
 categories: apache-spark
 featured: false
 hidden: false
+draft: true
 ---
 
 Caching is a common approach for reusing certain computation in Apache Spark. It's one of the optimisation techniques in Spark. Among big data practitioners, caching receives a lot of consideration and discussion.

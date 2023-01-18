@@ -10,9 +10,8 @@ tags: ["apache-spark", "hadoop", "parquet", "columnar-format", "columnar-storage
 categories: data-files-and-formats
 featured: false
 hidden: false
+draft: true
 ---
-
-> **Writing in progress:** If you have any suggestions for improving the content or notice any inaccuracies, please email me at [hello@senthilnayagan.com](mailto:hello@senthilnayagan.com). Thanks!
 
 # Parquet Motivation
 

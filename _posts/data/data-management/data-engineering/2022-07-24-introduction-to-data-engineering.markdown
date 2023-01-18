@@ -10,9 +10,8 @@ tags: ["data-engineering", "big-data", "data-pipeline"]
 categories: data-engineering
 featured: false
 hidden: false
+draft: true
 ---
-
-> **Writing in progress:** If you have any suggestions for improving the content or notice any inaccuracies, please email me at [hello@senthilnayagan.com](mailto:hello@senthilnayagan.com).<br/><br/>Thanks!
 
 # What is data engineering?
 Data engineering is the process of designing and building systems for acquiring large amounts of raw operational data from various sources and formats, analysing it, transforming it, and storing it at scale. The management of the data infrastructure is a particular focus of data engineering. Data engineering is usually regarded as the primary support for present data analytics needs.

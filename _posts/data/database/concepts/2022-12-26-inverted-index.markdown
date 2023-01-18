@@ -11,6 +11,7 @@ categories: Database
 featured: false
 hidden: true
 toc: false
+draft: true
 ---
 
 # What is an inverted index?

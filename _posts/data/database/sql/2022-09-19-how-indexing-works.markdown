@@ -11,6 +11,7 @@ categories: database
 featured: false
 hidden: true
 toc: false
+draft: true
 ---
 
 # What is indexing in database?

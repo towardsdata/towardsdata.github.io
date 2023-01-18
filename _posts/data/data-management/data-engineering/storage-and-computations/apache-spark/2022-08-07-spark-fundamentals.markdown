@@ -10,9 +10,8 @@ tags: ["apache-spark"]
 categories: apache-spark
 featured: false
 hidden: true
+draft: true
 ---
-
-> **Writing in progress:** If you have any suggestions for improving the content or notice any inaccuracies, please email me at [hello@senthilnayagan.com](mailto:hello@senthilnayagan.com). Thanks!
 
 The necessity for data distribution over several computers arises from either the data being too massive to store on a single machine or the computation being too long to accomplish on a single machine.
 
