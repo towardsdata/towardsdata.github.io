@@ -18,7 +18,7 @@ post_class: post-template
     <!-- Author and Date -->
     {% assign author = site.authors[page.author] %}
     {% if page.author %}
-    <div class="d-flex align-items-center mt-4">
+    <div class="d-flex align-items-center mt-4" style="font-size: 85%">
         <div>
             {% if author.avatar %}
             <img class="author-thumb" src="{{site.baseurl}}/{{ author.avatar }}" alt="{{ author.display_name }}">
@@ -27,7 +27,7 @@ post_class: post-template
             {% endif %}
         </div>            
         <div>
-            Written by <b>{{ author.display_name }}</b> on 
+            <b>{{ author.display_name }}</b><br/> 
             <span class="post-date"><time class="post-date" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time></span>           
             {% if page.last_modified_at %}
             (Updated: <time datetime="{{ page.last_modified_at | date_to_xmlschema }}" itemprop="dateModified">{{ page.last_modified_at | date: "%b %-d, %Y" }}</time>)
