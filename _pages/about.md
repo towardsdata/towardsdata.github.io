@@ -29,7 +29,8 @@ Happy learning!
 
 **Email:** [hello@towardsdata.dev](mailto:hello@towardsdata.dev)<br/>
 **Twitter:** [@towardsdata](https://twitter.com/towardsdata){:target="_blank"}<br/>
-**GitHub:** [towardsdata](https://github.com/towardsdata){:target="_blank"}
+**GitHub:** [towardsdata](https://github.com/towardsdata){:target="_blank"}<br/>
+**Instagram:** [towardsdata](https://www.instagram.com/towardsdata){:target="_blank"}
 
 <!--
 <a target="_blank" href="https://bootstrapstarter.com/jekyll-theme-memoirs/" class="btn btn-dark"> Get Memoirs for Jekyll &rarr;</a>
