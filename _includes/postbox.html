@@ -26,7 +26,7 @@
             <span class="card-text">{{ post.subtitle | strip_html | truncatewords:50 }}</span>
         </div>
         {% if post.author %}
-            <div class="card-footer d-flex align-items-center mt-4" style="font-size: 85%">
+            <div class="card-footer d-flex align-items-center mt-0" style="font-size: 85%">
                 <div>
                     <img class="author-thumb" src="https://www.gravatar.com/avatar/{{ author.gravatar }}?s=250&d=mm&r=x" alt="{{ author.display_name }}">
                 </div>
