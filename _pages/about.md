@@ -7,9 +7,6 @@ comments: false
 --imageshadow: false
 ---
 
-<!-- Home Icon -->
-{% include home-icon.html %}
-
 We live in a world full of data, but how can we best use it? It's hardly a secret that data is the most precious thing on the planet when used wisely.
 
 The goal of **towards data** is to virtually unite data professionals, each with their own unique set of skills and expertise, to share their insights with one another. Presently, it serves as a blog platform where we delve into a broad variety of data-related concepts, such as how to productively produce, manage, and democratize data.
