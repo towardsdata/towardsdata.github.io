@@ -310,10 +310,10 @@ img, img:hover {
     color: #333;
     padding: 0;
     display: flex;
-    align-items:center;
+    align-items: center;
     .author-thumb {
-        width:40px;
-        border-radius:50%;
+        width: 50px;
+        border-radius: 50%;
         margin-right: 7px;
     }
     .card {
@@ -344,8 +344,8 @@ img, img:hover {
     .card-text {
         font-weight: 400;
         font-size: 16px;
-        line-height: 1.8;
-        margin-top: 15px;
+        //line-height: 1.2;
+        //margin-top: 15px;
     }
     .card-footer {
         font-size: 14px;
@@ -355,7 +355,8 @@ img, img:hover {
         background: $grey-bg;
         a {
             color: inherit;
-            font-weight: 700;
+            //font-weight: 700;
+            font-weight: 400;
         }
     }
     .post-date {
