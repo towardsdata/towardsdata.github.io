@@ -13,7 +13,8 @@ This blog is made with Jekyll and hosted on GitHub Pages. Note that this website
  
 Feel free to get in touch with us if you like reading our posts, have feedback for us, or would like to contribute.
  
-Happy learning! 
+Happy learning!
+ 
 
 **Senthil Nayagan**
 
@@ -22,8 +23,8 @@ Happy learning!
 
 **Email:** [hello@towardsdata.dev](mailto:hello@towardsdata.dev)
 
-**Twitter:** [@towardsdata](https://twitter.com/towardsdata){:target="_blank"}
+**Twitter:** [@towardsdata](https://twitter.com/towardsdata)
 
-**Instagram:** [towardsdata](https://www.instagram.com/towardsdata){:target="_blank"}
+**Instagram:** [towardsdata](https://www.instagram.com/towardsdata)
 
-**GitHub:** [towardsdata](https://github.com/towardsdata){:target="_blank"}
+**GitHub:** [towardsdata](https://github.com/towardsdata)
