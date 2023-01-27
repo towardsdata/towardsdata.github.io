@@ -2,8 +2,8 @@
 name: "towards data"
 title: "towards data"
 description: "In towards data, we delve into a broad variety of data-related concepts, such as how to productively produce, manage, and democratize data. In all of our posts, we strive to provide you with sufficient information to grasp the concepts while also making them as simple to read as possible."
-logo: 'assets/images/logo_transparent.png'
-favicon: 'assets/images/logo_square_solid.png'
+logo: 'assets/images/logo/logo_transparent.png'
+favicon: 'assets/images/logo/logo_square_solid.png'
 baseurl: ""
 disqus: 'towardsdata'
 mailchimp-list: 'https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4'
@@ -11,6 +11,7 @@ include: ["_pages"]
 permalink: /:categories/:year/:title
 email: hello@towardsdata.dev
 contact-us: https://formspree.io/f/xdovkgjv
+author: https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x
 
 # Authors
 authors:
