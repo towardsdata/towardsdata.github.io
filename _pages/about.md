@@ -25,7 +25,8 @@ Happy learning!
 <sup>Founder and Content Creator, **towardsdata.dev**.</sup>
 
 **Email:** [hello@towardsdata.dev](mailto:hello@towardsdata.dev)<br/>
-**Twitter:** [@towardsdata](https://twitter.com/towardsdata){:target="_blank"}<br/>
+**Twitter:** [towardsdata](https://twitter.com/towardsdata){:target="_blank"}<br/>
+**Mastodon:** [towardsdata](https://fosstodon.org/@towardsdata){:target="_blank"}<br/>
 **Instagram:** [towardsdata](https://www.instagram.com/towardsdata){:target="_blank"}<br/>
 **GitHub:** [towardsdata](https://github.com/towardsdata){:target="_blank"}<br/>
 
