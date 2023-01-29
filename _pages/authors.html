@@ -21,13 +21,16 @@ comments: false
                         <a class="d-inline-block mx-1 text-dark" href="mailto:{{ author[1].email }}"><i class="fa fa-envelope"></i></a>
                     {% endif %}
                     {% if author[1].web %}
-                        <a target="_blank" class="d-inline-block mx-1 text-dark" href="{{ author[1].web }}"><i class="fa fa-link"></i></a> 
+                        <a target="_blank" class="d-inline-block mx-1 text-dark" href="{{ author[1].web }}"><i class="fa-solid fa-window-maximize"></i></a> 
+                    {% endif %}
+                    {% if author[1].mastodon %}
+                        <a target="_blank" class="d-inline-block mx-1 text-dark" href="{{ author[1].mastodon }}"><i class="fa-brands fa-mastodon"></i></a>
+                    {% endif %}                    
+                    {% if author[1].twitter %}
+                        <a target="_blank" class="d-inline-block mx-1 text-dark" href="{{ author[1].twitter }}"><i class="fa-brands fa-twitter"></i></a>
                     {% endif %}
                     {% if author[1].twitter %}
-                        <a target="_blank" class="d-inline-block mx-1 text-dark" href="{{ author[1].twitter }}"><i class="fab fa-twitter"></i></a>
-                    {% endif %}
-                    {% if author[1].twitter %}
-                        <a target="_blank" class="d-inline-block mx-1 text-dark" href="{{ author[1].instagram }}"><i class="fab fa-instagram"></i></a>
+                        <a target="_blank" class="d-inline-block mx-1 text-dark" href="{{ author[1].instagram }}"><i class="fa-brands fa-square-instagram"></i></a>
                     {% endif %}
                 </p>
             </div>
