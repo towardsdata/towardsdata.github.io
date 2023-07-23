@@ -70,7 +70,7 @@ Let's take a closer look at **Great Expectations** to see how it might assist us
 
 # Introduction to Great Expectations (GX)
 
-Great Expectations, shortly referred to as **GX**, is a **powerful** and **flexible** open-source data quality solution on the market today. We'll take a close look at it with examples to demonstrate how powerful and flexible GX tool is.
+Great Expectations, shortly referred to as **GX**, is a powerful and flexible open-source data quality solution on the market today. We'll take a close look at it with examples to demonstrate how powerful and flexible GX tool is.
 
 Unlike traditional unit tests, GX applies tests to data instead of code. To put it simply, **in GX, testing is performed on data rather than code**. It's a Python library that enables us to verify that our data is accurate by **profiling**, **validating**, and **documenting** it. 
 
@@ -109,4 +109,29 @@ The Great Expectations team's statement about Windows support is as follows:
 
 *"Great Expectations is developed and tested on macOS and Linux Ubuntu. Windows support for the open source Python version of GX is currently unavailable. If you’re using GX in a Windows environment, you might experience errors or performance issues."* 
 
-Refer to the following link: https://docs.greatexpectations.io/docs/guides/setup/installation/local/#prerequisites
+Refer to the following link: [https://docs.greatexpectations.io/docs/guides/setup/installation/local/#prerequisites](https://docs.greatexpectations.io/docs/guides/setup/installation/local/#prerequisites){:target="_blank"}.
+
+## Let's get started with the basics
+
+In earlier versions of Great Expectations, to define the data sources that needed to be validated, we were required to compose quite a few lines of code, either manually or using Jupyter Notebook. In recent versions, however, the complexities have been put aside with the introduction of a new data source API called **Fluent Datasource**. We will discuss it in great detail in the following sections. 
+
+The most recent version of Great Expectations will be used in this post. At the time of writing, the most current version is `0.17.6`. As stated before, Great Expectations is a Python library that offers a framework for defining and validating the acceptable condition of data. 
+
+### Great Expectations core components
+
+When working with Great Expectations, we use four core components to access the underlying data, prepare test assertions, and conduct validations.
+
+- **Data Context:** Manages the settings and metadata for a GX project, and provides an entry point to the GX Python API.
+- **Datasources:** Connects to various data sources, and organizes retrieved data for future use.
+- **Expectations:** Test assertions.
+- **Checkpoints:** Validates a set of Expectations against a specific set of data.
+
+#### Data Context
+
+A Data Context manages the settings and metadata for a GX project. In Python, the Data Context object serves as the entry point for the GX API. A Data Context contains all the metadata used by GX, the configurations for GX objects, and the output from validating data.
+
+The following are the various Data Context types:
+
+- **Ephemeral Data Context:** Exists in memory, and does not persist beyond the current Python session. It can be converted into a File Data Context if we want it for future use.
+- **File Data Context:** Exists as a folder and configuration files. Its contents persist between Python sessions.
+- **Cloud Data Context:** Supports persistence between Python sessions, but additionally serves as the entry point for Great Expectations Cloud.
