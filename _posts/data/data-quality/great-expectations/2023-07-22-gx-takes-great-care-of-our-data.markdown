@@ -128,10 +128,14 @@ When working with Great Expectations, we use four core components to access the 
 
 #### Data Context
 
-A Data Context manages the settings and metadata for a GX project. In Python, the Data Context object serves as the entry point for the GX API. A Data Context contains all the metadata used by GX, the configurations for GX objects, and the output from validating data.
+A Data Context manages the settings and metadata for a GX project. In Python, the Data Context object serves as the *entry point* for the GX API. A Data Context provides us with methods to configure our **Stores**, **Plugins**, and **Data Docs**. It also provides the methods needed to create, configure, and access our **Datasources**, **Expectations**, **Profilers**, and **Checkpoints**. In addition to all of that, it internally manages the **Metrics**, **Validation Results**, and the contents of our **Data Docs** for us. Expectations, Profilers, Checkpoints, Metrics, and Validation Results will all be covered in greater depth later on. Having said that, a Data Context contains all the metadata used by GX, the configurations for GX objects, and the output from validating data.
 
 The following are the various Data Context types:
 
 - **Ephemeral Data Context:** Exists in memory, and does not persist beyond the current Python session. It can be converted into a File Data Context if we want it for future use.
 - **File Data Context:** Exists as a folder and configuration files. Its contents persist between Python sessions.
 - **Cloud Data Context:** Supports persistence between Python sessions, but additionally serves as the entry point for Great Expectations Cloud.
+
+#### Datasources
+
+GX provides better connectivity with a wide variety of data sources.
