@@ -100,5 +100,12 @@ The data sharing capability enables us to set up permissions on datasets stored 
 In Lake Formation, we can implement permissions on two levels:
 
 - **Metadata layer:** Applying metadata-level restrictions to databases and tables that are part of the Data Catalog.
-- **Storage layer:** Managing storage access permissions on the underlying data stored in Amazon S3 on behalf of integrated engines.
+- **Storage layer:** Managing storage access permissions on the underlying data stored in Amazon S3 on behalf of integrated analytical engines such as Amazon Athena, AWS Glue, Amazon EMR, or Amazon Redshift Spectrum.
+
+### Lake Formation permissions management high-level workflow
+
+todo
+
+# Frequently asked questions (FAQ)
+
 
