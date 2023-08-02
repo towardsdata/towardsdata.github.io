@@ -38,7 +38,7 @@ Having said that, at a high level, the three tasks outlined below should be carr
 
 Once we identify the locations of our existing databases (whether they are on AWS or in external data sources) and give access credentials, Lake Formation reads the data and its metadata (schema) to understand the information contained in the data source. The data is subsequently imported into our new data lake, and the metadata is stored in a *central* catalog. Typically, the data that is being ingested from multiple data sources ends up in S3 buckets of our choice. Note that both bulk and incremental data ingestions are supported.
 
-|![Figure 1: Data Flow](/assets/images/posts/data-sources-to-lake-formation-to-s3-buckets.png){: width="60%" }|
+|![Figure 1: Data Flow](/assets/images/posts/data-sources-to-lake-formation-to-s3-buckets.png){: width="70%" }|
 |:-:|
 |<sup>*Figure 1: Data Flow.*</sup>|<br/><br/>
 
@@ -49,4 +49,56 @@ We can use **AWS Glue crawlers** to read our data in Amazon S3, extract table de
 > **AWS Glue Crawler:** A AWS Glue Crawler examines our data store, extracts metadata (which contains the format, database and table schema, and associated properties of the data), and stores it in the AWS Glue Data Catalog.
 
 ### Security management
+
+#### Define and manage access controls
+
+Lake Formation provides a single place (centrally) to manage access controls for data in our data lake. We can define security policies that restrict access to data at the database, table, column, row, and cell levels. These policies apply to IAM users and roles, as well as to users and groups that are federated through an external identity provider. 
+
+We can use fine-grained controls to access data protected by the Lake Formation within:
+
+- **Amazon Redshift Spectrum**
+- **Athena**
+- **AWS Glue ETL**
+- **Amazon EMR for Apache Spark**
+
+#### Audit logs
+
+Lake Formation provides extensive audit logs with CloudTrail to monitor access and demonstrate compliance with centrally defined policies. We can audit the data access history in our data lake via Lake Formation. This enables us to identify which users or roles have tried to access which data, via which services, at what time. We can access audit logs in the same way we access any other CloudTrail logs using the CloudTrail APIs and console.
+
+#### Row and cell-level security
+
+Data filters offered by Lake Formation enable us to restrict access to a set of columns and rows. Use row and cell-level security to safeguard sensitive data, such as personally Identifiable Information (PII).
+
+We can create the following levels of data security using Lake Formation's data filtering capabilities:
+
+##### Column-level security
+
+Column-level security allows users to view only specific columns that they have access to in the table.
+
+##### Row-level security
+
+Row-level security allows users to view only specific rows of data that they have access to in the table.
+
+##### Cell-level security
+
+Cell-level security combines row filtering and column filtering for a highly flexible permissions model. If we think of the rows and columns of a table as a grid, we can restrict access to individual elements (cells) of the grid anywhere in the two dimensions by using cell-level security.
+
+#### Tag-based access control (TBAC)
+
+Use Lake Formation *tag based access control* to manage hundreds or even thousands data permissions by creating custom labels called LF-tags. We can define LF-tags and attach them to databases, tables, or columns. Then, share controlled access across analytic, ML, and ETL services for consumption. LF-tags ensure that data governance can be scaled easily by replacing the policy definitions of thousands of resources with a few logical tags. Users can easily find the information they need for analysis by using the text-based search function that Lake Formation offers over this metadata.
+
+#### Cross account access
+
+Lake Formation permission management capabilities make it easier to secure and manage distributed data lakes *across different AWS accounts* through centralized, fine-grained control over the Data Catalog and Amazon S3 locations.
+
+### Data sharing
+
+The data sharing capability enables us to set up permissions on datasets stored in different data sources, such as Amazon Redshift, *without migrating data or metadata* into Amazon S3 or AWS Glue Data Catalog.
+
+## How it works
+
+In Lake Formation, we can implement permissions on two levels:
+
+- **Metadata layer:** Applying metadata-level restrictions to databases and tables that are part of the Data Catalog.
+- **Storage layer:** Managing storage access permissions on the underlying data stored in Amazon S3 on behalf of integrated engines.
 
