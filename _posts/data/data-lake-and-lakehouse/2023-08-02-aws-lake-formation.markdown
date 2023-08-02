@@ -95,12 +95,62 @@ Lake Formation permission management capabilities make it easier to secure and m
 
 The data sharing capability enables us to set up permissions on datasets stored in different data sources, such as Amazon Redshift, *without migrating data or metadata* into Amazon S3 or AWS Glue Data Catalog.
 
+## Metadata permissions
+
+Data Catalog access is governed by Lake Formation. When an IAM role or user makes an API call to the Data Catalog from any system, the Data Catalog verifies the role or user's data permissions and returns only the metadata for which the user or role has access. For instance, if an IAM role has access to only one table within a database and a service or user assuming the role performs the `GetTables` operation, the response will only contain the one table, regardless of the number of tables within the database.
+
+### Default permissions
+
+AWS Lake Formation, by default, sets permissions to all databases and tables to a virtual *group* named `IAMAllowedPrincipal`. This group is exclusive to Lake Formation and visible only within Lake Formation. The `IAMAllowedPrincipal` group includes all IAM principals who have access to Data Catalog resources through IAM principal policies and AWS Glue resource policies. If this permissions exists on a database or table, all principals will be granted access to the database or table. 
+
+If we want to provide more granular permissions on a database or table, remove the `IAMAllowedPrincipal` permission and Lake Formation will apply all other policies associated with that database or table. For instance, if a policy grants user `user1` access to database `db1` with `DESCRIBE` permissions and the `IAMAllowedPrincipal` exists with all permissions, user `user1` will continue to perform all other actions until the `IAMAllowedPrincipal` permission is revoked. Additionally, by default, the `IAMAllowedPrincipal` group has permissions on all newly created databases and tables. There are two configurations that control this behaviour. The first is at the account and Region-level that enables this for newly created databases, and the second is at the database level.
+
+### Granting permissions
+
+Data lake administrators can grant Data Catalog permissions to principals, allowing them to create and manage databases and tables as well as access underlying data.
+
+#### Database and table-level permissions
+
+When granting permissions in Lake Formation, the grantor must specify:
+
+- the *principal* to grant permissions to
+- the *resources* to grant permissions on
+- the *actions* the grantee (recipient) can carry out
+  
+We can grant AWS Lake Formation permissions using two methods:
+
+- **Named resource method** - Allows us to choose database and table names while granting permissions to users.
+- **LF-Tag based access control (LF-TBAC)** (Recommended)
+
+When we grant permissions to a principal, Lake Formation evaluates those permissions as the union of all policies for that user. For example, if we have two policies on a table for a certain principal, and one policy grants permissions to the columns `col1`, `col2`, and `col3` via the *named resource* method, and the other policy grants permissions to the same table and principal to `col5`, and `col6` via *LF-Tags*, the effective permissions will be the union of the permissions, which would be `col1`, `col2`, `col3`, `col5`, and `col6`.
+
 ## How it works
 
 In Lake Formation, we can implement permissions on two levels:
 
 - **Metadata layer:** Applying metadata-level restrictions to databases and tables that are part of the Data Catalog.
 - **Storage layer:** Managing storage access permissions on the underlying data stored in Amazon S3 on behalf of integrated analytical engines such as Amazon Athena, AWS Glue, Amazon EMR, or Amazon Redshift Spectrum.
+
+#### Data location permissions
+
+Data location permissions allow *non-administrative users* to create databases and tables in particular Amazon S3 locations. The creation task fails if a user attempts to create a database or table in a location for which they do not have permissions. This prevents users from creating tables in any location within the data lake and restricts where users can read and write data.
+
+#### Create table and database permissions
+
+By default, non-administrative users are not allowed to create databases or tables. Database creation is controlled at the account-level using the Lake Formation settings so that only authorized principals can create databases. To create a table, a principal must have `CREATE_TABLE` permission on the database where the table is being created.
+
+#### Implicit and explicit permissions
+
+Lake Formation provides implicit permissions depending on the principal and the actions that the principal performs. For example, data lake administrators automatically get:
+
+- `DESCRIBE` permissions to all resources within the Data Catalog
+- Data location permissions to all locations
+- Permissions to create databases and tables in all locations
+- `Grant` and `Revoke` permissions on any resource
+
+#### Grantable permissions
+
+Data lake administrators have the ability to delegate the management of permissions to non administrative users by providing grantable permissions. When a principal is granted grantable permissions and a set of permissions for a resource, that principal gains the ability to grant permissions to other principals for that resource.
 
 ### Lake Formation permissions management high-level workflow
 
@@ -110,7 +160,7 @@ todo
 
 ## What is credential vending?
 
-The term "vending" literally refers to earning income by selling goods. Lake Formation allows third-party services to integrate with Lake Formation by using credential vending API operations.
+The term "vending" literally refers to earning income by selling goods. Lake Formation allows third-party services to integrate with Lake Formation by using credential vending API operations. Credential vending, or *token vending* is a common pattern that provides *temporary credentials* to users, services, or some other entity for the purposes of granting short term access to a resource.
 
 ## What is a data catalog?
 
@@ -148,9 +198,15 @@ Lake Formation **tag-based access control** (**TBAC**) solves this problem by al
 
 > **Note:** Taxonomy, in this context, is a *data taxonomy* is a way of organizing and classifying data. It involves creating a hierarchy of categories and subcategories that can be used to classify and organize data consistently and logically, allowing datasets to be understood quickly regardless of who is viewing them.
 
-Lake Formation TBAC decouples policy creation from resource creation, allowing data administrators to manage permissions on many databases, tables, and columns without having to update policies every time a new resource is added to the data lake. TBAC allows us to create policies even before the resources come into existence. We can now define LF-tags, associate them at the database, table, or column level, and share controlled access across analytic, machine learning (ML), and ETL services for consumer consumption.
+Lake Formation TBAC decouples policy creation from resource creation, allowing data administrators to manage permissions on many databases, tables, and columns without having to update policies every time a new resource is added to the data lake. TBAC allows us to create policies even before the resources come into existence. We can now define LF-tags, associate them at the database, table, or column level, and share controlled access across analytic, machine learning (ML), and ETL services for consumer consumption. 
 
-### What values can be assigned LF-tags?
+LF-TBAC works with IAM's **attribute-based access control** (**ABAC**) to provide fine-grained access to our data lake resources and data. LF-TBAC is the recommended method for granting Lake Formation permissions when the Data Catalog contains a significant number of resources.
+
+> **IAM tags vs.  LF-tags:** IAM tags are not the same as LF-tags. These tags are not interchangeable. LF-tags are used to grant Lake Formation permissions and IAM tags are used to define IAM policies.
+
+### What values can be assigned to LF-tags?
+
+Each LF-tag is a key-value pair, such as `department=marketting` or `classification=restricted`. A key can have multiple defined values, such as `department=sales,marketing,engineering,finance`.
 
 - Tags can be up to 128 characters.
 - Values can be up to 256 characters.
@@ -160,3 +216,5 @@ Lake Formation TBAC decouples policy creation from resource creation, allowing d
 Examples: 
 Key=Confidentiality | Values=private, sensitive, public
 Key=Project | Values=project1, project2
+
+Refer to this [link](https://docs.aws.amazon.com/lake-formation/latest/dg/tag-based-access-control.html){:target="_blank"} for more informatoion on LF-tags.
