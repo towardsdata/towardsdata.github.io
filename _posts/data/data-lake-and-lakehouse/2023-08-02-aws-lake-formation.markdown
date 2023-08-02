@@ -108,4 +108,6 @@ todo
 
 # Frequently asked questions (FAQ)
 
+## What is credential vending?
 
+The term "vending" literally refers to earning income by selling goods. Lake Formation allows third-party services to integrate with Lake Formation by using credential vending API operations.
