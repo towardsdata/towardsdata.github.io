@@ -111,3 +111,52 @@ todo
 ## What is credential vending?
 
 The term "vending" literally refers to earning income by selling goods. Lake Formation allows third-party services to integrate with Lake Formation by using credential vending API operations.
+
+## What is a data catalog?
+
+In general, the Data catalog is a persistent repository for storing metadata. A data catalog in AWS is referred to as **AWS Glue Data Catalog** or simply Data Catalog, and it is a managed service that enables us to *store*, *annotate*, and *share* metadata in the AWS Cloud. It provides a *centralized repository* where disparate systems, such as any data store, etc., can store and find metadata to locate Underlying data in data silos and then use that metadata to query and transform the data.
+
+AWS Lake Formation uses the AWS Glue Data Catalog to store and retrieve metadata about data lakes. Lake Formation provides a hierarchy of permissions to control access in the AWS Glue Data Catalog.
+
+## How many Data catalogs can exist per AWS region and per AWS account?
+
+Each AWS account has *one* Data Catalog per AWS Region.
+
+## What is Principal in AWS?
+
+A principal is an AWS IAM user or role or an Active Directory user.
+
+## Who is the Data Lake administrator?
+
+A data lake administrator is a *principal* who can grant any permission on any Data Catalog resource or data location to any other principal (including self). Data lake administrator can then grant more granular permissions of resources to other principals. Note that IAM administrative users—users with the `AdministratorAccess` AWS managed policy—are not automatically data lake administrators. 
+
+## What is Blueprint in Lake Formation?
+
+A blueprint is a data management template that enables us to easily ingest data into a data lake. Lake Formation provides several blueprints, each for a predefined source type, such as a relational database or AWS CloudTrail logs. From a blueprint, we can create a **workflow**.
+
+## What is a workflow?
+
+A workflow is a container consisting of **AWS Glue crawlers**, **jobs**, and **triggers** that are generated to orchestrate the loading and updating of data. create the workflow in Lake Formation, and it executes in the AWS Glue service. Lake Formation can track the status of a workflow as a single entity. 
+
+Blueprints use the data source, the data target, and the schedule to configure the workflow. In other words, when we define a workflow, we select the blueprint upon which it is based. We can then run workflows on demand or on a schedule. Workflows that we create in Lake Formation are visible in the AWS Glue console as a directed acyclic graph (DAG). Using the DAG, we can track the progress of the workflow and perform troubleshooting.
+
+## What is tag-based access control in the AWS Lake Formation, and what's the need for it?
+
+As the number of tables and users increase, data stewards and administrators are looking for ways to manage permissions on data lakes easily at scale. Customers are struggling with “role explosion” and need to manage hundreds or even thousands of user permissions to control data access. For example, for an account with 500 resources and 50 principals, the data steward would have to create and manage up to 2500 policy statements. As new principals and resources get added or deleted, these policies must be updated to keep the permissions current.
+
+Lake Formation **tag-based access control** (**TBAC**) solves this problem by allowing data stewards or data administrators to create **LF-tags** (based on their business needs) that are attached to resources. Rather than specifying policies on named resources, policies can be created on a smaller number of logical tags. In other waords, we can create and manage policies with tens of logical tags instead of the thousands of resources. LF-tags enable us to categorize and explore data based on *taxonomies*, which reduces policy complexity and scales permissions management. 
+
+> **Note:** Taxonomy, in this context, is a *data taxonomy* is a way of organizing and classifying data. It involves creating a hierarchy of categories and subcategories that can be used to classify and organize data consistently and logically, allowing datasets to be understood quickly regardless of who is viewing them.
+
+Lake Formation TBAC decouples policy creation from resource creation, allowing data administrators to manage permissions on many databases, tables, and columns without having to update policies every time a new resource is added to the data lake. TBAC allows us to create policies even before the resources come into existence. We can now define LF-tags, associate them at the database, table, or column level, and share controlled access across analytic, machine learning (ML), and ETL services for consumer consumption.
+
+### What values can be assigned LF-tags?
+
+- Tags can be up to 128 characters.
+- Values can be up to 256 characters.
+- Up to 15 values per tag.
+- Up to 50 LF-tags per resource.
+  
+Examples: 
+Key=Confidentiality | Values=private, sensitive, public
+Key=Project | Values=project1, project2
