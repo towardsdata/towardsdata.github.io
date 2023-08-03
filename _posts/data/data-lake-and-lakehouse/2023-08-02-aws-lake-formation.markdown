@@ -101,7 +101,7 @@ Data Catalog access is governed by Lake Formation. When an IAM role or user make
 
 ### Default permissions
 
-AWS Lake Formation, by default, sets permissions to all databases and tables to a virtual *group* named `IAMAllowedPrincipal`. This group is exclusive to Lake Formation and visible only within Lake Formation. The `IAMAllowedPrincipal` group includes all IAM principals who have access to Data Catalog resources through IAM principal policies and AWS Glue resource policies. If this permissions exists on a database or table, all principals will be granted access to the database or table. 
+AWS Lake Formation, by default, sets permissions to all databases and tables to a virtual *group* named `IAMAllowedPrincipal`. This group is *exclusive* to Lake Formation and visible only within Lake Formation. The `IAMAllowedPrincipal` group includes all IAM principals who have access to Data Catalog resources through IAM principal policies and AWS Glue resource policies. If this permissions exists on a database or table, all principals will be granted access to the database or table. 
 
 If we want to provide more granular permissions on a database or table, remove the `IAMAllowedPrincipal` permission and Lake Formation will apply all other policies associated with that database or table. For instance, if a policy grants user `user1` access to database `db1` with `DESCRIBE` permissions and the `IAMAllowedPrincipal` exists with all permissions, user `user1` will continue to perform all other actions until the `IAMAllowedPrincipal` permission is revoked. Additionally, by default, the `IAMAllowedPrincipal` group has permissions on all newly created databases and tables. There are two configurations that control this behaviour. The first is at the account and Region-level that enables this for newly created databases, and the second is at the database level.
 
@@ -218,3 +218,13 @@ Key=Confidentiality | Values=private, sensitive, public
 Key=Project | Values=project1, project2
 
 Refer to this [link](https://docs.aws.amazon.com/lake-formation/latest/dg/tag-based-access-control.html){:target="_blank"} for more informatoion on LF-tags.
+
+## Why is it necessary to upgrade AWS Glue data permissions to the AWS Lake Formation model?
+
+AWS Lake Formation permissions enable fine-grained access control for data in our data lake. 
+
+To maintain backward compatibility with AWS Glue, by default, AWS Lake Formation grants the `Super` permission to the `IAMAllowedPrincipals` *group* on all existing AWS Glue Data Catalog resources, and grants the `Super` permission on new Data Catalog resources if the **Use only IAM access control** settings are enabled. As a result of this, *only* AWS IAM policies are really able to control access to Data Catalog resources and Amazon S3 locations.
+
+All IAM users and roles with access privileges to our Data Catalog objects are part of the `IAMAllowedPrincipals` group. The `Super` permission enables a principal to perform every supported Lake Formation operation (`SELECT`, `CREATE`, `DELETE`, and so on) on the database or table on which it is granted.
+
+By registering the locations of existing Data Catalog resources (e.g. S3 buckets) in Lake Formation, we can start using Lake Formation to govern access to our data.
