@@ -186,9 +186,11 @@ A blueprint is a data management template that enables us to easily ingest data 
 
 ## What is a workflow?
 
-A workflow is a container consisting of **AWS Glue crawlers**, **jobs**, and **triggers** that are generated to orchestrate the loading and updating of data. create the workflow in Lake Formation, and it executes in the AWS Glue service. Lake Formation can track the status of a workflow as a single entity. 
+A workflow is a *container* consisting of **AWS Glue crawlers**, **jobs**, and **triggers** that are generated to orchestrate the loading and updating of data. Lake Formation can track the status of a workflow as a single entity. 
 
-Blueprints use the data source, the data target, and the schedule to configure the workflow. In other words, when we define a workflow, we select the blueprint upon which it is based. We can then run workflows on demand or on a schedule. Workflows that we create in Lake Formation are visible in the AWS Glue console as a directed acyclic graph (DAG). Using the DAG, we can track the progress of the workflow and perform troubleshooting.
+Blueprints use the data source, the data target, and the schedule to configure the workflow. In other words, when we define a workflow, we select the blueprint upon which it is based. We can then run workflows on demand or on a schedule. Workflows that we create in Lake Formation are visible in the AWS Glue console as a directed acyclic graph (DAG). Each DAG node is a job, crawler, or trigger. Using the DAG, we can track the progress of the workflow and perform troubleshooting.
+
+The user who executed a Lake Formation workflow is given the Lake Formation SELECT permission on the Data Catalog tables that the workflow creates after it has finished.
 
 ## What is tag-based access control in the AWS Lake Formation, and what's the need for it?
 
@@ -228,3 +230,7 @@ To maintain backward compatibility with AWS Glue, by default, AWS Lake Formation
 All IAM users and roles with access privileges to our Data Catalog objects are part of the `IAMAllowedPrincipals` group. The `Super` permission enables a principal to perform every supported Lake Formation operation (`SELECT`, `CREATE`, `DELETE`, and so on) on the database or table on which it is granted.
 
 By registering the locations of existing Data Catalog resources (e.g. S3 buckets) in Lake Formation, we can start using Lake Formation to govern access to our data.
+
+## What are the governed tables in the AWS Lake Formation?
+
+A governed table is a new Amazon S3 table type that supports **ACID transactions**.
