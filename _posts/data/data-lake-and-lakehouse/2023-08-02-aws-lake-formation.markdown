@@ -233,7 +233,11 @@ By registering the locations of existing Data Catalog resources (e.g. S3 buckets
 
 ## What are the governed tables in the AWS Lake Formation?
 
-A governed table is a new Amazon S3 table type that supports **ACID transactions**.
+A governed table is a new Amazon S3 table type that supports **ACID transactions**. It supports time travel as well. Note that the data that governed tables manage is actually stored in our S3 buckets. So we retain control over our data.
+
+The data is stored in *open file formats* like Parquet, CSV, and JSON. We make it super easy and fast to import and export data from popular table formats like Apache Hudi, Delta Lake, and Apache Iceberg.
+
+Due to the fact that governed tables track all of the possible updates, we can always access a previous version of our data lake. Thus, governed tables support **time travel**.
 
 ## Who is designated as the LF-Tag creator?
 
@@ -247,3 +251,18 @@ LF-Tag creators have implicit Lake Formation permissions to:
 - Grant LF-Tag permissions and LF-Tag value permissions to other principals
 
 Data lake administrators can give non-admin principals the responsibility of generating and changing tag keys and values using LF-Tag creator roles. Data lake administrators can also grant LF-Tag creators grantable `Create LF-Tag` permissions. Then, the LF-Tag creator can grant the permission to create LF-Tags to other principals.
+
+## What are Lake Formation's acceleration capabilities in order to enhance its performance?
+
+There are two acceleration capabilities offered by Lake Formation to enhance performance:
+
+- **Push-down filters and aggregations**
+- **Storage optimizer**
+
+### Push-down filters and aggregations
+
+We already have the read APIs, which enforce row-level security, and they are running filters over our data. In addition, we can push down additional filters that we need when we are running the analytics. We can also push down other aggregations, for example, sums, averages, and variences. In addition to computing the rows that we are allowed to see because of the row-level security parameters, we also apply the additional filters in the aggregations, which reduces the amount of data that comes back.
+
+## Storage optimizer
+
+We also have a storage optimizer for governed tables that works in the background and automatically compiles small files into larger ones (aka file compactions) and automatically merges deltas into the large files as well.
