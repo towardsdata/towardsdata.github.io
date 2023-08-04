@@ -234,3 +234,16 @@ By registering the locations of existing Data Catalog resources (e.g. S3 buckets
 ## What are the governed tables in the AWS Lake Formation?
 
 A governed table is a new Amazon S3 table type that supports **ACID transactions**.
+
+## Who is designated as the LF-Tag creator?
+
+LF-Tag creator is a *non-admin* principal who has permissions to create and manage LF-Tags. Data lake administrators can add LF-Tag creators using the Lake Formation console or CLI. 
+
+LF-Tag creators have implicit Lake Formation permissions to:
+
+- Update LF-Tags
+- Delete LF-Tags
+- Assign LF-Tags to resources
+- Grant LF-Tag permissions and LF-Tag value permissions to other principals
+
+Data lake administrators can give non-admin principals the responsibility of generating and changing tag keys and values using LF-Tag creator roles. Data lake administrators can also grant LF-Tag creators grantable `Create LF-Tag` permissions. Then, the LF-Tag creator can grant the permission to create LF-Tags to other principals.
