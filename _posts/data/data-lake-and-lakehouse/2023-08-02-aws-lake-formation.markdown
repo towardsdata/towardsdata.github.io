@@ -95,21 +95,50 @@ Lake Formation permission management capabilities make it easier to secure and m
 
 The data sharing capability enables us to set up permissions on datasets stored in different data sources, such as Amazon Redshift, *without migrating data or metadata* into Amazon S3 or AWS Glue Data Catalog.
 
-## Metadata permissions
+## Users, roles and permissions
 
+### Users and roles
+
+The following lists the roles that are used in the AWS Lake Formation:
+
+- **IAM administrator** - A user who can create AWS IAM users and roles and Amazon S3 buckets. Has the `AdministratorAccess` AWS managed policy.
+- **Data lake administrator** - A user who can access the Data Catalog, create databases, and grant permissions to other users for the Lake Formation. Has fewer IAM permissions than the IAM administrator, but sufficient permissions to manage the data lake.
+- **Data analyst** - A user who can run queries against the data lake. Has only enough permissions to run queries.
+- **Workflow role** - A role with the required IAM policies to run a workflow.
+
+### Permissions
+
+There are two main types of permissions in AWS Lake Formation:
+
+- **Metadata access** - Permissions on Data Catalog resources (Data Catalog permissions). These permissions enable principals to create, read, update, and delete metadata databases and tables in the Data Catalog.
+- **Underlying data access** - Permissions on locations in Amazon S3 (data access permissions and data location permissions). Data lake permissions enable principals to read and write data to underlying Amazon S3 locations. Data location permissions enable principals to create and alter metadata databases and tables that point to specific Amazon S3 locations.
+
+For both areas, Lake Formation uses a combination of: 
+
+- Lake Formation permissions
+- AWS Identity and Access Management (IAM) permissions. 
+
+The IAM permissions model consists of IAM policies. The Lake Formation permissions model is implemented as **DBMS-style** `GRANT`/`REVOKE` commands, such as Grant SELECT on tableName to userName.
+
+When a principal makes a request to access Data Catalog resources or underlying data, the request must pass both IAM and Lake Formation permission checks for the request to succeed.
+
+Lake Formation permissions control access to Data Catalog resources, Amazon S3 locations, and the underlying data at those locations. IAM permissions control access to the Lake Formation and AWS Glue APIs and resources. So although we might have the Lake Formation permission to create a metadata table in the Data Catalog (`CREATE_TABLE`), our operation fails if we don't have the IAM permission on the `glue:CreateTable` API. 
+
+
+TODO:
 Data Catalog access is governed by Lake Formation. When an IAM role or user makes an API call to the Data Catalog from any system, the Data Catalog verifies the role or user's data permissions and returns only the metadata for which the user or role has access. For instance, if an IAM role has access to only one table within a database and a service or user assuming the role performs the `GetTables` operation, the response will only contain the one table, regardless of the number of tables within the database.
 
-### Default permissions
+#### Default permissions
 
 AWS Lake Formation, by default, sets permissions to all databases and tables to a virtual *group* named `IAMAllowedPrincipals`. This group is *exclusive* to Lake Formation and visible only within Lake Formation. The `IAMAllowedPrincipals` group includes all IAM principals who have access to Data Catalog resources through IAM principal policies and AWS Glue resource policies. If this permissions exists on a database or table, all principals will be granted access to the database or table. 
 
 If we want to provide more granular permissions on a database or table, remove the `IAMAllowedPrincipals` permission and Lake Formation will apply all other policies associated with that database or table. For instance, if a policy grants user `user1` access to database `db1` with `DESCRIBE` permissions and the `IAMAllowedPrincipals` exists with all permissions, user `user1` will continue to perform all other actions until the `IAMAllowedPrincipals` permission is revoked. Additionally, by default, the `IAMAllowedPrincipals` group has permissions on all newly created databases and tables. There are two configurations that control this behaviour. The first is at the account and Region-level that enables this for newly created databases, and the second is at the database level.
 
-### Granting permissions
+#### Granting permissions
 
-Data lake administrators can grant Data Catalog permissions to principals, allowing them to create and manage databases and tables as well as access underlying data.
+*Data lake administrators* can grant Data Catalog permissions to principals, allowing them to create and manage databases and tables as well as access underlying data.
 
-#### Database and table-level permissions
+##### Database and table-level permissions
 
 When granting permissions in Lake Formation, the grantor must specify:
 
@@ -124,37 +153,33 @@ We can grant AWS Lake Formation permissions using two methods:
 
 When we grant permissions to a principal, Lake Formation evaluates those permissions as the union of all policies for that user. For example, if we have two policies on a table for a certain principal, and one policy grants permissions to the columns `col1`, `col2`, and `col3` via the *named resource* method, and the other policy grants permissions to the same table and principal to `col5`, and `col6` via *LF-Tags*, the effective permissions will be the union of the permissions, which would be `col1`, `col2`, `col3`, `col5`, and `col6`.
 
-## How it works
+#### How it works
 
 In Lake Formation, we can implement permissions on two levels:
 
 - **Metadata layer:** Applying metadata-level restrictions to databases and tables that are part of the Data Catalog.
 - **Storage layer:** Managing storage access permissions on the underlying data stored in Amazon S3 on behalf of integrated analytical engines such as Amazon Athena, AWS Glue, Amazon EMR, or Amazon Redshift Spectrum.
 
-#### Data location permissions
+##### Data location permissions
 
 Data location permissions allow *non-administrative users* to create databases and tables in particular Amazon S3 locations. The creation task fails if a user attempts to create a database or table in a location for which they do not have permissions. This prevents users from creating tables in any location within the data lake and restricts where users can read and write data.
 
-#### Create table and database permissions
+##### Create table and database permissions
 
 By default, non-administrative users are not allowed to create databases or tables. Database creation is controlled at the account-level using the Lake Formation settings so that only authorized principals can create databases. To create a table, a principal must have `CREATE_TABLE` permission on the database where the table is being created.
 
-#### Implicit and explicit permissions
+##### Implicit and explicit permissions
 
-Lake Formation provides implicit permissions depending on the principal and the actions that the principal performs. For example, data lake administrators automatically get:
+Lake Formation provides implicit permissions depending on the principal and the actions that the principal performs. For example, *data lake administrators* automatically get:
 
 - `DESCRIBE` permissions to all resources within the Data Catalog
 - Data location permissions to all locations
 - Permissions to create databases and tables in all locations
 - `Grant` and `Revoke` permissions on any resource
 
-#### Grantable permissions
+##### Grantable permissions
 
-Data lake administrators have the ability to delegate the management of permissions to non administrative users by providing grantable permissions. When a principal is granted grantable permissions and a set of permissions for a resource, that principal gains the ability to grant permissions to other principals for that resource.
-
-### Lake Formation permissions management high-level workflow
-
-todo
+*Data lake administrators* have the ability to delegate the management of permissions to non administrative users by providing grantable permissions. When a principal is granted grantable permissions and a set of permissions for a resource, that principal gains the ability to grant permissions to other principals for that resource.
 
 # Frequently asked questions (FAQ)
 
@@ -168,6 +193,10 @@ In general, the Data catalog is a persistent repository for storing metadata. A 
 
 AWS Lake Formation uses the AWS Glue Data Catalog to store and retrieve metadata about data lakes. Lake Formation provides a hierarchy of permissions to control access in the AWS Glue Data Catalog.
 
+## What are Data Catalog resources?
+
+The *databases*, *tables*, and *columns* in the Data Catalog are referred to as Data Catalog resources.
+
 ## How many Data catalogs can exist per AWS region and per AWS account?
 
 Each AWS account has *one* Data Catalog per AWS Region.
@@ -178,7 +207,7 @@ A principal is an AWS IAM user or role or an Active Directory user.
 
 ## Who is the Data Lake administrator?
 
-A data lake administrator is a *principal* who can grant any permission on any Data Catalog resource or data location to any other principal (including self). Data lake administrator can then grant more granular permissions of resources to other principals. Note that IAM administrative users—users with the `AdministratorAccess` AWS managed policy—are not automatically data lake administrators. 
+A *data lake administrator* is a *principal* who can grant any permission on any Data Catalog resource or data location to any other principal (including self). Data lake administrator can then grant more granular permissions of resources to other principals. Note that IAM administrative users—users with the `AdministratorAccess` AWS managed policy—are not automatically data lake administrators. 
 
 ## What is Blueprint in Lake Formation?
 
@@ -243,7 +272,7 @@ Due to the fact that governed tables track all of the possible updates, we can a
 
 LF-Tag creator is a *non-admin* principal who has permissions to create and manage LF-Tags. Data lake administrators can add LF-Tag creators using the Lake Formation console or CLI. 
 
-LF-Tag creators have implicit Lake Formation permissions to:
+LF-Tag creators have *implicit* Lake Formation permissions to:
 
 - Update LF-Tags
 - Delete LF-Tags
@@ -261,8 +290,26 @@ There are two acceleration capabilities offered by Lake Formation to enhance per
 
 ### Push-down filters and aggregations
 
-We already have the read APIs, which enforce row-level security, and they are running filters over our data. In addition, we can push down additional filters that we need when we are running the analytics. We can also push down other aggregations, for example, sums, averages, and variences. In addition to computing the rows that we are allowed to see because of the row-level security parameters, we also apply the additional filters in the aggregations, which reduces the amount of data that comes back.
+We already have the read APIs, which enforce row-level security, and they are running filters over our data. In addition, we can push down additional filters that we need when we are running the analytics. We can also push down other aggregations, for example, *sums*, *averages*, and *variences*. In addition to computing the rows that we are allowed to see because of the row-level security parameters, we also apply the additional filters in the aggregations, which reduces the amount of data that comes back.
 
-## Storage optimizer
+### Storage optimizer
 
-We also have a storage optimizer for governed tables that works in the background and automatically compiles small files into larger ones (aka file compactions) and automatically merges deltas into the large files as well.
+We also have a *storage optimizer* for governed tables that works in the background and automatically compiles small files into larger ones (aka file compactions) and automatically merges deltas into the large files as well.
+
+## What is in-place data consumption in the Lake Formation?
+
+The data mesh allows us to share data from the producer data lakes, rather than copying it to the consumer applications that use it. This reduces the storage bill down. Also, sharing data minimizes discrepencies in the data between the system that produced the data and the system that consumes it.
+
+Note that in-place consumption requires more sophisticated access control mechanisms than those needed to control access to copied data.
+
+## Does any data catalog hold any data?
+
+Typically, a data catalog doesn't hold any data.
+
+## Are data domains solely consumers or producers?
+
+Data domains can belong to both producers and consumers. Data domains can be purely producers, like a finance domain that only produces sales and revenue data for consumers, or purely consumers, like a product recommendation service that consumes data from other domains to generate the product recommendations displayed on an ecommerce website.
+
+## What are the resource links in the data catalog?
+
+The Data Catalog also contains *resource links*, which are links to shared databases and tables in *external accounts*, and are used for cross-account access to data in the data lake. Each AWS account has one Data Catalog per AWS Region.
