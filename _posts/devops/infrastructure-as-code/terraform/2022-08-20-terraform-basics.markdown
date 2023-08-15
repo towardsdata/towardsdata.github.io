@@ -9,6 +9,7 @@ featured_image: assets/images/featured-images/terraform_basics.jpg
 author: senthil
 toc: true
 date: 2022-08-20 00:00:00 +0530
+last_modified_at: 2023-08-15 00:00:00 +0530
 tags: ["terraform", "infrastructure-as-code", "iac"]
 categories: terraform
 featured: true
@@ -17,9 +18,13 @@ hidden: false
 
 # Introducing infrastructure as code (IaC)
 
-Infrastructure as Code (IaC) refers to the *process of managing and provisioning infrastructure using code* rather than manual processes. When we talk about "infrastructure as code," we mean that we manage our IT infrastructure with code in the form of configuration files.
+Infrastructure as Code (IaC) refers to the *process of managing and provisioning infrastructure using code* rather than manual processes, typically via a graphical user interface. When we talk about "infrastructure as code," we mean that we manage our IT infrastructure with code in the form of configuration files. IaC allows us to *build*, *change*, and *manage* our infrastructure in a **safe**, **consistent**, and **repeatable way**.
 
-Configuration files that describe our infrastructure are produced by IaC. Changes and sharing of configurations are made simpler as a result. An IaC process produces the same environment every time it deploys, just as the same source code always generates the same binary.
+Changes, sharing, and reuse of configurations are made simpler as a result. It lets us define resources and infrastructure in *human-readable*, *declarative configuration files* and manages our infrastructure lifecycle. An IaC process produces the same environment every time it deploys, just as the same source code always generates the same binary.
+
+## Human-readable configuration language
+
+The human-readable configuration language helps us write infrastructure code quickly.
 
 ## It's a version control
 
@@ -120,7 +125,7 @@ The Terraform language uses a limited number of top-level block types, which are
 
 ### Providers
 
-Terraform makes use of *providers* to connect the Terraform engine to the supported cloud platform. Other than a cloud platform, other things can be considered a provider, such as platform-as-a-service (PaaS) (e.g., Kubernetes) and other software-as-a-service (SaaS). 
+Terraform plug-ins, called *providers*, let Terraform interact with cloud platforms and other services via their APIs. Having said that, other than a cloud platform, other things can be considered providers, such as **platform-as-a-service** (**PaaS**) (e.g., Kubernetes) and other **software-as-a-service** (**SaaS**). 
 
 It's a *Terraform plugin* that serves as a *translation layer*, allowing Terraform to communicate with a variety of cloud providers, databases, and services.
 
@@ -379,7 +384,7 @@ On a high level, we will follow these steps:
 
 #### CDKTF to HCL
 
-The `cdktf synth` command synthesizes (generate code/configuration) Terraform configuration for the given app. CDKTF stores the synthesized configuration in the `cdktf.out` directory, unless you use the `--output` flag to specify a different location.
+The `cdktf synth` command synthesizes (generate code/configuration) Terraform configuration for the given app. CDKTF stores the synthesized configuration in the `cdktf.out` directory, unless we use the `--output` flag to specify a different location.
 
 The output folder is ephemeral (short lived) and might be erased for each `synth` that we run manually or that happens automatically when we run `deploy`, `diff`, or `destroy`.
 
