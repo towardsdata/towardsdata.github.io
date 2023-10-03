@@ -87,3 +87,7 @@ Here is an outline of how webhooks and APIs vary from one another:
 * **Use cases**: Webhooks are typically used for real-time notifications, while APIs handle a wide range of operations, such as data retrieval and updates.
 
 Depending on the application's specific needs and use cases, one may choose to make use of an API or a webhook.
+
+## Webhooks vs. gRPCs
+
+gRPC is a framework for building high-performance, open-source RPC-based communication between applications, while webhooks are a mechanism for event-driven communication, often used for real-time notifications and integration with external services. The choice between gRPC and webhooks will rely on our application's integration needs, communication preferences, and performance requirements. 
