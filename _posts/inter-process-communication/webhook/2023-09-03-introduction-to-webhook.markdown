@@ -2,7 +2,7 @@
 layout: post
 title:  "Introduction to Webhook"
 kicker: "Webhook"
-subtitle: "A webhook is a method that *enables one application to send data with another application in real-time when specific events occur. It enables different software systems to communicate with one another by sending data or alerts instantly when a specific event happens. Webhooks are used by a wide variety of web apps to receive small amounts of data from other applications."
+subtitle: "A webhook is a method that enables one application to send data with another application in real-time when specific events occur. It enables different software systems to communicate with one another by sending data or alerts instantly when a specific event happens. Webhooks are used by a wide variety of web apps to receive small amounts of data from other applications."
 image: assets/images/posts-cover-images/webhook-introduction.jpg
 imageshadow: true
 toc: true
