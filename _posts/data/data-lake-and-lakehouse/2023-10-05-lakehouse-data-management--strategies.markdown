@@ -37,5 +37,11 @@ Lakehouse has chosen **Apache Parquet** as the preferred storage file format. Fo
 
 # Lakehouse's data management strategies
 
-Apache Hudi, Delta Lake, and Apache Iceberg are three popular open-source projects that aim to improve the management and processing of data in data lakes. They each have their own approach to handling data updates or deletes, and their design choices relate to the concepts of **Copy on Write** (**CoW**) and **Merge on Read** (**MoR**) in different ways. In other words, these Lakehouse architectures often combine CoW and MoR strategies, depending on the specific needs and design principles of the system. For instance, in Apache Hudi, Copy on Write (CoW) is the default storage technique whereas Merge on Read (MoR) is an optional one.
+Apache Hudi, Delta Lake, and Apache Iceberg are three popular open-source projects that aim to improve the management and processing of data in data lakes. They each have their own approach to handling data updates or deletes, and differing design choices relate to the concepts of **Copy on Write** (**CoW**) and **Merge on Read** (**MoR**). In other words, these Lakehouse architectures often combine CoW and MoR strategies, depending on the specific needs and design principles of the framework. For instance, in Apache Hudi, Copy on Write (CoW) is the default storage technique whereas Merge on Read (MoR) is an optional one.
+
+Let's examine each of these approaches in further detail by using one of these Lakehouse frameworks to see how it applies these strategies to dealing with updates and deletions. We'll make use of the Apache Hudi framework to walk through these strategies, but a similar idea can apply to Delta Lake and Apache Iceberg.
+
+## How does Apache Hudi perform updates and deletes under the hood?
+
+
 
