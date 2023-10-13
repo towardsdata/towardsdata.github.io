@@ -141,7 +141,7 @@ During the update, Hudi uses one of the indexing methods to locate the impacted 
 |:-:|
 |<sup>*Figure 1: Hudi update created a new delta file.*</sup>|<br/><br/>
 
-### Updates affecting more than one underlying data file 
+#### Updates affecting more than one underlying data file 
 
 Updates may affect more than one underlying data file, depending on the update criteria used. Consider a scenario where we update the salary if the employee is older than `40`. The updates in this case affect three records that are spread across various partitions.
 
