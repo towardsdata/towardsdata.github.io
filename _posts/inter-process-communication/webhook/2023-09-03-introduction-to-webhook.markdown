@@ -90,4 +90,8 @@ Depending on the application's specific needs and use cases, one may choose to m
 
 ## Webhooks vs. gRPCs
 
-gRPC is a framework for building high-performance, open-source RPC-based communication between applications, while webhooks are a mechanism for event-driven communication, often used for real-time notifications and integration with external services. The choice between gRPC and webhooks will rely on our application's integration needs, communication preferences, and performance requirements. 
+gRPC is a framework for building high-performance, open-source RPC-based communication between applications, while webhooks are a mechanism for event-driven communication, often used for real-time notifications and integration with external services. The choice between gRPC and webhooks will rely on our application's integration needs, communication preferences, and performance requirements.
+
+## Webhooks vs. WebSockets
+
+todo
