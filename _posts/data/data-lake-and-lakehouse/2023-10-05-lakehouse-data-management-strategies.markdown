@@ -43,13 +43,15 @@ Let's go over some key data management strategies for a lakehouse. Apache Hudi, 
 
 ## Update and delete operations
 
-It's crucial for today's lakehouse to support update and delete operations with ACID properties. Each lakehouse has its own approach to handling data updates or deletes, and differing design choices relate to the concepts of **Copy-on-Write** (**CoW**) and **Merge-on-Read** (**MoR**). Typically, these Lakehouse architectures often combine CoW and MoR strategies, depending on the specific needs and design principles of the lakehouse architecture. For instance, in Apache Hudi, Copy-on-Write (CoW) is the default storage technique, whereas Merge-on-Read (MoR) is an optional one, letting users to choose the strategy that best fits their use cases.
+When dealing with "updates" and "deletes" in traditional data lakes, the entire dataset or specific partition(s) must be rewritten. It is a tedious and time-consuming activity. It's crucial for today's lakehouse to support update and delete operations with ACID properties. Each lakehouse has its own approach to handling data updates or deletes, and differing design choices relate to the concepts of **Copy-on-Write** (**CoW**) and **Merge-on-Read** (**MoR**). Typically, these Lakehouse architectures often combine CoW and MoR strategies, depending on the specific needs and design principles of the lakehouse architecture. For instance, in Apache Hudi, Copy-on-Write (CoW) is the default storage technique, whereas Merge-on-Read (MoR) is an optional one, letting users to choose the strategy that best fits their use cases.
 
-What exactly are Copy-on-Write and Merge-on-Read? Note that these are not only the two concepts of data management strategies but also two different dataset types. That's right, you got it :-) Understanding each of these strategies—Copy-on-Write as well as Merge-on-Read—in depth will help us go forward. Let's see how one of the Lakehouse frameworks uses the Cow and MoR strategies to deal with updates and deletes. We'll make use of the Apache Hudi framework to walk through these strategies, but a similar idea can apply to Delta Lake and Apache Iceberg.
+What exactly are Copy-on-Write and Merge-on-Read? Note that these are not only the two concepts of data management strategies but also two different dataset types. That's right, you got it :-) Understanding each of these strategies—Copy-on-Write as well as Merge-on-Read—in depth will help us go forward.
+
+Let's see how one of the Lakehouse frameworks uses the Cow and MoR strategies to deal with updates and deletes. We'll make use of the Apache Hudi framework to walk through these strategies, but a similar idea can apply to Delta Lake and Apache Iceberg.
 
 ### Copy-on-Write (CoW)
 
-Having said that, Copy-on-Write (CoW) is the default storage technique in Apache Hudi and it stores data in a columnar format (Parquet). With Copy-on-Write datasets, each time there is an update to a record, the file that contains the record is rewritten into a *new version of the file* with the updated values. Updates may affect more than one underlying data file, so the Copy-on-Write (CoW) mechanism typically creates multiple new delta files during a write operation rather than a single delta file.
+Copy-on-Write (CoW) is a sort of optimized variant of the older method of performing delete and update operations. Having said that, Copy-on-Write is the default storage technique in Apache Hudi and it stores data in a columnar format (Parquet). With Copy-on-Write datasets, each time there is an update to a record, the file that contains the record is rewritten into a *new version of the file* with the updated values. Updates may affect more than one underlying data file, so the Copy-on-Write (CoW) mechanism typically creates multiple new delta files during a write operation rather than a single delta file.
 
 The underlying table data is physically stored as individual files, which are often grouped into *partitions* (directories) using date-time or other partitioning methods. At a high level, this is how updates work: Apache Hudi locates the impacted files in each partition using one of the indexing techniques, then reads them completely, updates them with new values in memory, and finally writes to disk and creates new files.
 
@@ -163,11 +165,125 @@ In this case, the Copy-on-Write created multiple delta files, highlighted below:
 |:-:|
 |<sup>*Figure 2: Hudi update affected multiple files.*</sup>|<br/><br/>
 
+Having that, with the Copy-on-Write table, each time a record is modified, the file containing the record is rewritten into a new version of the file with the updated values as shown below:
+
+|![Figure 3: Copy-on-Write - How it works?](/assets/images/posts/hudi-cow-how-it-works.png){: width="100%" }|
+|:-:|
+|<sup>*Figure 3: Copy-on-Write - How it works?*</sup>|<br/><br/>
+
+#### Updates made to a single Hudi table with many rows of data
+
+Consider a scenario in which an update is performed on a single Hudi table with multiple rows of data. Let's use the same employee data. This time, the data will not be partitioned in order to generate a single Hudi Parquet table.
+
+```bash
+tableName = "emp_single_hudi"
+basePath = "file:///tmp/emp_single_hudi"
+
+columns = ["id","name","age","salary","department"]
+data =[(1695159649087,"John Sundar",43,2000,"data engineering"),
+       (1695091554788,"Senthil Nayagan",40,2300,"data science"),
+       (1695046462179,"Arun Anand",37,1800,"business analyst"),
+       (1695516137016,"Jeff Parks",50,5000,"business analyst"),
+       (1695115999911,"Vicky",39,2400,"data engineering")]
+
+inserts = spark.createDataFrame(data).toDF(*columns)
+
+hudi_options = {
+    "hoodie.table.name": tableName, 
+    "hoodie.datasource.write.operation": "insert",
+}
+
+df.write \
+    .format("hudi") \
+    .options(**hudi_options) \
+    .mode("overwrite") \
+    .save(basePath)
+```
+
+With the above code snippet, we were able to create a single Hudi Parquet, as shown below:
+
+```bash
+sasen@Sasens-MacBook-Pro emp_single_hudi % tree -D -t
+[Oct 14 17:50]  .
+└── [Oct 14 17:50]  435187f7-ac3c-41e8-b149-0a3fb496548e-0_0-15-14_20231014174958919.parquet
+
+0 directories, 1 file
+```
+
+Let's update a specific row. For example, update `Vicky`'s age to `42`. Following the update, check the underlying Parquet file.
+
+```bash
+>>> from pyspark.sql.functions import lit, col
+>>> updatesDf = spark.read.format("hudi").load(basePath).filter("name == 'Vicky'").withColumn("age", col("age")+3)
+>>> updatesDf.filter("name == 'Vicky'").show()
++-------------------+--------------------+--------------------+----------------------+--------------------+-------------+-----+---+------+----------------+
+|_hoodie_commit_time|_hoodie_commit_seqno|  _hoodie_record_key|_hoodie_partition_path|   _hoodie_file_name|           id| name|age|salary|      department|
++-------------------+--------------------+--------------------+----------------------+--------------------+-------------+-----+---+------+----------------+
+|  20231014174958919|20231014174958919...|20231014174958919...|                      |435187f7-ac3c-41e...|1695115999911|Vicky| 42|  2400|data engineering|
++-------------------+--------------------+--------------------+----------------------+--------------------+-------------+-----+---+------+----------------+
+
+>>> updatesDf.write.format("hudi"). \
+...   options(**hudi_options). \
+...   mode("append"). \
+...   save(basePath)
+```
+
+Now we reach an important point that needs attention. After the update, Hudi's Copy-on-Write method created an additional Parquet file (created at 17:57), as shown below:
+
+```bash
+sasen@Sasens-MacBook-Pro emp_single_hudi % tree -D -t
+[Oct 14 17:57]  .
+├── [Oct 14 17:50]  435187f7-ac3c-41e8-b149-0a3fb496548e-0_0-15-14_20231014174958919.parquet
+└── [Oct 14 17:57]  435187f7-ac3c-41e8-b149-0a3fb496548e-0_0-36-35_20231014175745613.parquet
+
+0 directories, 2 files
+```
+
+As we see, the original file that was created at 17:50 remains unchanged during the update. Under the hood, Hudi's CoW created a new version of the original file and appended the modified row to the new file.
+
+```bash
+>>> existingFile = spark.read.parquet('./emp_single_hudi/435187f7-ac3c-41e8-b149-0a3fb496548e-0_0-15-14_20231014174958919.parquet')
+>>> newFile = spark.read.parquet('./emp_single_hudi/435187f7-ac3c-41e8-b149-0a3fb496548e-0_0-36-35_20231014175745613.parquet')
+>>> existingFile.select("id", "name", "age", "salary", "department").show()
++-------------+---------------+---+------+----------------+
+|           id|           name|age|salary|      department|
++-------------+---------------+---+------+----------------+
+|1695159649087|    John Sundar| 43|  2000|data engineering|
+|1695091554788|Senthil Nayagan| 40|  2300|    data science|
+|1695046462179|     Arun Anand| 37|  1800|business analyst|
+|1695516137016|     Jeff Parks| 50|  5000|business analyst|
+|1695115999911|          Vicky| 39|  2400|data engineering|
++-------------+---------------+---+------+----------------+
+
+>>> newFile.select("id", "name", "age", "salary", "department").show()
++-------------+---------------+---+------+----------------+
+|           id|           name|age|salary|      department|
++-------------+---------------+---+------+----------------+
+|1695159649087|    John Sundar| 43|  2000|data engineering|
+|1695091554788|Senthil Nayagan| 40|  2300|    data science|
+|1695046462179|     Arun Anand| 37|  1800|business analyst|
+|1695516137016|     Jeff Parks| 50|  5000|business analyst|
+|1695115999911|          Vicky| 39|  2400|data engineering|
+|1695115999911|          Vicky| 42|  2400|data engineering|
++-------------+---------------+---+------+----------------+
+```
+
+#### Advantages of Copy-on-Write (CoW)
+
+- **Immutability**: One of the primary advantages of CoW is immutability. In CoW, once a data record is written, it is never modified. Instead, a new version of the record is created every time an update occurs. This immutability is beneficial for maintaining data lineage
+- **Optimized for query performance**: CoW can be optimized for read-heavy workloads because the data remains immutable (unchanged) and multiple read operations can be performed simultaneously without any locking or blocking issues. Thus, it is an ideal choice for scenarios where there are a high number of read operations.
+
+#### Disadvantages of Copy-on-Write (CoW)
+
+- todo
+
+### Merge-on-Read (MoR)
+
 # Frequently asked questions (FAQ)
 
 ## How can I know what kind (Copy-on-Write or Merge-on-Write) of Hudi table this is?
 
-To determine whether a Hudi table is using Copy-on-Write or Merge-on-Write storage, one can inspect the metadata and configuration associated with the Hudi table. One way to look at it is to check the `hoodie.properties` file, which can be found in our Hudi table directory. If our Hudi table is `employees_table`, then a hidden sub-directory named `.hoodie` can be found inside. Check the `hoodie.properties` file to see the type of table.
+To determine whether a Hudi table is using Copy-on-Write or Merge-on-Write storage, one can inspect the metadata and configuration associated with the Hudi table. One way to look at it is to check the `hoodie.properties` file, which can be found in our Hudi table directory. If our Hudi table is `employees_table`, then a hidden sub-directory named `.hoodie` can be found inside. Check the `hoodie.properties` file in the `.hoodie` subdirectory to see the type of table.
 
 ```bash
 sasen@Sasens-MacBook-Pro .hoodie % cat hoodie.properties
@@ -175,3 +291,16 @@ sasen@Sasens-MacBook-Pro .hoodie % cat hoodie.properties
 #Fri Oct 13 17:12:37 IST 2023
 hoodie.table.type=COPY_ON_WRITE
 ```
+
+## What is "record key" in Apache Hudi?
+
+The "record key" is a fundamental concept in Apache Hudi used to uniquely identify records or rows within a Hudi dataset. It plays a crucial role in the organization and management of data, particularly when dealing with upserts and merge operations.
+
+Here's a more detailed explanation:
+
+- **Uniqueness**: The record key is used to ensure that each record in a Hudi table is unique. Hudi requires that each record has a unique record key in order to maintain data integrity.
+- **Organization of data**: The record key is used to organize data within Hudi tables. Data records with the same record key are logically grouped together, often referred to as a "partition." This organization enables efficient data retrieval and manipulation.
+- **Upserts**: Hudi supports operations like upserts, which involve inserting new records and updating existing records based on their record keys. The record key is crucial for determining which records should be updated and which ones should be inserted as new records.
+- **Indexing**: The record key is frequently used to create an index that enables fast lookups and retrieval of specific Hudi dataset records. This is particularly essential for point queries, which retrieve a specific record based on its record key.
+- **Consistency and ACID transactions**: The record key is used to enforce data consistency through ACID transactions by preventing duplicate or conflicting records.
+- **Customized record key**: We can choose a field within our data as the record key or even generate a synthetic key if needed. The choice of the record key depends on our data and use case.
