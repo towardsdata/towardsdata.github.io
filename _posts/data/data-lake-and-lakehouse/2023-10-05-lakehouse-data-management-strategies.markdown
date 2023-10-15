@@ -43,15 +43,15 @@ Let's go over some key data management strategies for a lakehouse. Apache Hudi, 
 
 ## Update and delete operations
 
-When dealing with "updates" and "deletes" in traditional data lakes, the entire dataset or specific partition(s) must be rewritten. It is a tedious and time-consuming activity. It's crucial for today's lakehouse to support update and delete operations with ACID properties. Each lakehouse has its own approach to handling data updates or deletes, and differing design choices relate to the concepts of **Copy-on-Write** (**CoW**) and **Merge-on-Read** (**MoR**). Typically, these Lakehouse architectures often combine CoW and MoR strategies, depending on the specific needs and design principles of the lakehouse architecture. For instance, in Apache Hudi, Copy-on-Write (CoW) is the default storage technique, whereas Merge-on-Read (MoR) is an optional one, letting users to choose the strategy that best fits their use cases.
+When dealing with "updates" and "deletes" in traditional data lakes, the entire dataset or specific partition(s) must be rewritten. It is a tedious and time-consuming activity. It's crucial for today's lakehouse to support update and delete operations with ACID properties. Each lakehouse has its own approach to handling data updates or deletes, and differing design choices relate to the concepts of **Copy-on-Write** (**CoW**) and **Merge-on-Read** (**MoR**). Typically, these Lakehouse architectures often combine CoW and MoR strategies, depending on the specific needs and design principles of the lakehouse architecture. For instance, in Apache Hudi, Copy-on-Write (CoW) is the default storage technique, whereas Merge-on-Read (MoR) is an optional one, letting users to choose the strategy that best fits their use cases. So in the case of Apache Hudi, both Copy-on-Write and Merge-on-Read coexist.
 
-What exactly are Copy-on-Write and Merge-on-Read? Note that these are not only the two concepts of data management strategies but also two different dataset types. That's right, you got it :-) Understanding each of these strategies—Copy-on-Write as well as Merge-on-Read—in depth will help us go forward.
+What exactly are Copy-on-Write and Merge-on-Read? Note that these are not only the two concepts of data management strategies but also two different dataset types. That's right, you got it :-) Infact, the specifics of how the data is laid out as files depend on one of these dataset types that we choose. Understanding each of these strategies—Copy-on-Write as well as Merge-on-Read—in depth will help us go forward.
 
 Let's see how one of the Lakehouse frameworks uses the Cow and MoR strategies to deal with updates and deletes. We'll make use of the Apache Hudi framework to walk through these strategies, but a similar idea can apply to Delta Lake and Apache Iceberg.
 
 ### Copy-on-Write (CoW)
 
-Copy-on-Write (CoW) is a sort of optimized variant of the older method of performing delete and update operations. Having said that, Copy-on-Write is the default storage technique in Apache Hudi and it stores data in a columnar format (Parquet). With Copy-on-Write datasets, each time there is an update to a record, the file that contains the record is rewritten into a *new version of the file* with the updated values. Updates may affect more than one underlying data file, so the Copy-on-Write (CoW) mechanism typically creates multiple new delta files during a write operation rather than a single delta file.
+Copy-on-Write (CoW) is a sort of optimized variant of the older method of performing delete and update operations. Having said that, Copy-on-Write is the default storage technique in Apache Hudi and it stores data in a columnar format (Parquet). With Copy-on-Write datasets, each time there is an update to a record, the file that contains the record is rewritten into a *new version of the file* with the updated values. Updates may affect more than one underlying data file, so the Copy-on-Write (CoW) mechanism typically creates multiple new delta files during a write operation rather than a single delta file. Note that more updates result in more versioned Parquet files.
 
 The underlying table data is physically stored as individual files, which are often grouped into *partitions* (directories) using date-time or other partitioning methods. At a high level, this is how updates work: Apache Hudi locates the impacted files in each partition using one of the indexing techniques, then reads them completely, updates them with new values in memory, and finally writes to disk and creates new files.
 
@@ -268,16 +268,30 @@ As we see, the original file that was created at 17:50 remains unchanged during 
 +-------------+---------------+---+------+----------------+
 ```
 
-#### Advantages of Copy-on-Write (CoW)
+#### Advantages of CoW
 
 - **Immutability**: One of the primary advantages of CoW is immutability. In CoW, once a data record is written, it is never modified. Instead, a new version of the record is created every time an update occurs. This immutability is beneficial for maintaining data lineage
 - **Optimized for query performance**: CoW can be optimized for read-heavy workloads because the data remains immutable (unchanged) and multiple read operations can be performed simultaneously without any locking or blocking issues. Thus, it is an ideal choice for scenarios where there are a high number of read operations.
 
-#### Disadvantages of Copy-on-Write (CoW)
+#### Disadvantages of CoW
 
-- todo
+- Write cost and write latency is higher.
+- 
+
+#### Use cases
+
+- Great for fast query or read performance.
+- To store append-only data (never updated) like event logs.
 
 ### Merge-on-Read (MoR)
+
+Merge-On-Read was pioneered by Apache Hudi for situations where Copy-on-Write may not be optimal. Despite the fact that CoW provides substantial cost and time savings, we must still rewrite a portion of the data. In the case of streaming data with CoW, more table updates resulted in more file versions and an increase in file count. This led to inefficient writes and less fresh data.
+
+Merge-on-Read (MoR) was the second storage table type created for Hudi to reduce the write amplification in CoW tables with frequent updates.
+
+#### Use cases
+
+- Best for update-heavy tables where we want faster and efficient writes.
 
 # Frequently asked questions (FAQ)
 
@@ -304,3 +318,11 @@ Here's a more detailed explanation:
 - **Indexing**: The record key is frequently used to create an index that enables fast lookups and retrieval of specific Hudi dataset records. This is particularly essential for point queries, which retrieve a specific record based on its record key.
 - **Consistency and ACID transactions**: The record key is used to enforce data consistency through ACID transactions by preventing duplicate or conflicting records.
 - **Customized record key**: We can choose a field within our data as the record key or even generate a synthetic key if needed. The choice of the record key depends on our data and use case.
+
+## How can we write data into the Hudi dataset/table?
+
+We can write data to the Hudi dataset using the Spark Data Source API or the Hudi DeltaStreamer utility.
+
+## What's the property in Hudi that defines the table/dataset type (either Copy-on-Write or Merge-on-Read)?
+
+We can use the `hoodie.datasource.write.table.type` property to set the table/dataset type. The default value is `COPY_ON_WRITE`. For a MoR table, set this value to `MERGE_ON_READ`.
