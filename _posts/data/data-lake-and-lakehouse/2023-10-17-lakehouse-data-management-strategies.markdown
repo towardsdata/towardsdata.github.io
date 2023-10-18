@@ -55,7 +55,9 @@ Copy-on-Write (CoW) is a sort of optimized variant of the older method of perfor
 
 The underlying table data is physically stored as individual files, which are often grouped into *partitions* (directories) using date-time or other partitioning methods. At a high level, this is how updates work: Apache Hudi locates the impacted files in each partition using one of the indexing techniques, then reads them completely, updates them with new values in memory, and finally writes to disk and creates new files.
 
-Let's try some code to test how the default behavior (Copy-on-Write) works when we try to modify the existing records in a Hudi table. We will run our exercises in PySpark with Hudi. The Apache Spark version used here is 3.4. 
+Let's try some code to test how the default behavior (Copy-on-Write) works when we try to modify the existing records in a Hudi table. We will run our exercises in PySpark with Hudi. 
+
+Here, Apache Spark version 3.4 and Apache Hudi version 0.14.0 are used. 
 
 ```bash
 export PYSPARK_PYTHON=$(which python3)
@@ -275,13 +277,15 @@ As we see, the original file that was created at 17:50 remains unchanged during 
 
 #### Disadvantages of CoW
 
-- Write cost and write latency is higher.
-- 
+- Write cost and write latency are higher. 
+- Write amplification is very high because it rewrites the whole dataset or partition.
 
 #### Use cases
 
-- Great for fast query or read performance.
-- To store append-only data (never updated) like event logs.
+- Great for fast query or read performance when write cost is not a concern.
+- The workload is reasonably predictable and not sporadic.
+- Ideal for batch ingestion.
+- Simple to operate.
   
 Since pictures speak louder than words, we've illustrated below how Copy-on-Write works through a sequence of commits:
 
@@ -305,10 +309,24 @@ The following illustrates how Merge-on-Read works with a sequence of updates:
 |:-:|
 |<sup>*Figure 5: Merge-on-Read - How it works with a series of commits.*</sup>|<br/><br/>
 
+#### Advantages of MoR
+
+- Write amplification is very low.
+
+#### Disadvantages of MoR
+
+While MoR has several advantages, it also comes with its own set of disadvantages:
+
+- Higher read latency because MoR merges data on-the-fly during read operations, which can slow down query performance.
+- Increased complexity. MoR can be more complex than CoR. It requires maintaining a separate set of index and base files to track changes, which can make the system more complicated and harder to manage.
+- 
+
 #### Use cases
 
-- Best for update-heavy (frequent updates) tables where we want faster and efficient writes.
-- 
+- Best for update-heavy (frequent updates) tables where we want faster and efficient writes. In other words, ideal for quick ingestion.
+- Workload can be changing or spiky.
+- Best for streaming data where MoR supports fast writes.
+- Both for read optimized and real-time.
 
 ### Copy-on-Write vs. Merge-on-Read
 
@@ -347,3 +365,7 @@ We can write data to the Hudi dataset using the Spark Data Source API or the Hud
 ## What's the property in Hudi that defines the table/dataset type (either Copy-on-Write or Merge-on-Read)?
 
 We can use the `hoodie.datasource.write.table.type` property to set the table/dataset type. The default value is `COPY_ON_WRITE`. For a MoR table, set this value to `MERGE_ON_READ`.
+
+## With Hudi MoR tables, how are the table names reflected in the AWS Glue Catalog?
+
+We can see two table name prefixes in the glue catalog. The one prefix is `ro` and the other is `rt`. `ro` stands for read optimized, and `rt` stands for real-time. Real-time applications can be consumed from the `rt` tables, and queries can be submitted against the ro' tables.
