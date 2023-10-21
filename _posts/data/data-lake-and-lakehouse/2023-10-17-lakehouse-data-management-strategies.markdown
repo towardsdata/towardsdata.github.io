@@ -11,7 +11,7 @@ date: 2023-10-17 00:000:00 +0530
 tags: [ "storage-strategies", "copy-on-write", "merge-on-read", "cow", "mor", "lakehouse" ]
 categories: lakehouse
 featured: false
-hidden: false
+hidden: true
 ---
 
 # Overview
@@ -308,6 +308,8 @@ The following illustrates how Merge-on-Read works with a sequence of updates:
 |![Figure 5: Merge-on-Read - How it works with a series of commits](/assets/images/posts/hudi-mor-how-it-works-illustration.png){: width="100%" }|
 |:-:|
 |<sup>*Figure 5: Merge-on-Read - How it works with a series of commits.*</sup>|<br/><br/>
+
+Note that internally, *compaction* in Hudi comes out as a special commit on the timeline.
 
 #### Advantages of MoR
 
