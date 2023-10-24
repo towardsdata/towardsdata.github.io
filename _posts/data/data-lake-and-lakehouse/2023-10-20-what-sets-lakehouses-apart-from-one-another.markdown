@@ -18,7 +18,7 @@ hidden: false
 
 There are a number of good lakehouse comparison studies and benchmarking blog posts that cover all aspects of features, but I'd like to focus on a few of the most essential features with statistics. I recommend reading all of those articles/posts to gain a complete understanding of the lakehouse’s features.
 
-The modern data lake is referred to as a "lakehouse", which is a hybrid architecture that combines the best of a data lake and a data warehouse to address the shortcomings and challenges of data management associated with the data lake. There are three popular lakehouses at the present time: **Apache Hudi**, **Apache Iceberg**, and **Delta Lake**. Although all of these lakehouses have the same objective of overcoming the pain points of data lakes, their unique features and distinct ways of doing things set them apart from one another.
+The modern data lake is referred to as a "lakehouse", which is a hybrid architecture that combines the best of a data lake and a data warehouse to address the shortcomings and challenges of data management associated with the data lake. There are three popular open-source lakehouses at the present time: **Apache Hudi**, **Apache Iceberg**, and **Delta Lake**. Although all of these lakehouses have the same objective of overcoming the pain points of data lakes, their unique features and distinct ways of doing things set them apart from one another.
 
 # A brief introduction to lakehouse and why it emerged as a modern data lake
 
@@ -134,6 +134,10 @@ While MoR has several advantages, it also comes with its own set of disadvantage
 All lakehouses use optimistic concurrency control (OCC) to provide transactional guarantees between writers. In optimistic concurrency control, writers look for overlapping files, and if a conflict exists, they fail the operation and retry. OCC is a technique used to optimize concurrency by minimizing the need for locking and blocking concurrent transactions.
 
 OCC relies on tracking the version or timestamp of each data item. When a transaction reads a data item, it notes the version or timestamp. When a transaction attempts to write or update a data item, it validates that the version or timestamp has not changed since the item was initially read. If the version and timestamp match, the write is permitted; otherwise, the transaction is rolled back (aborted) and must be retried.
+
+## Incremental ingestion
+
+todo
 
 # Frequently asked questions (FAQ)
 
