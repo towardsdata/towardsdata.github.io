@@ -12,13 +12,14 @@ tags: [ "lakehouses", "transactionsl-data-lake", "delta-lake", "lakehouse" ]
 categories: lakehouse
 featured: false
 hidden: false
+draft: true
 ---
 
 # Overview
 
-There are a number of good lakehouse comparison studies and benchmarking blog posts that cover all aspects of features, but I'd like to focus on a few of the most essential features with statistics. I recommend reading all of those articles/posts to gain a complete understanding of the lakehouse’s features.
+There are a number of good lakehouse comparison studies and benchmarking blog posts that cover all aspects of features, but I'd like to focus on a few of the most essential features with statistics. I recommend reading all of those posts to gain a complete understanding of the lakehouse’s features.
 
-The modern data lake is referred to as a "lakehouse", which is a hybrid architecture that combines the best of a data lake and a data warehouse to address the shortcomings and challenges of data management associated with the data lake. There are three popular open-source lakehouses at the present time: **Apache Hudi**, **Apache Iceberg**, and **Delta Lake**. Although all of these lakehouses have the same objective of overcoming the pain points of data lakes, their unique features and distinct ways of doing things set them apart from one another.
+The modern data lake is referred to as a "lakehouse", which is a hybrid architecture that combines the best of a data lake and a data warehouse to address the shortcomings and challenges of data management associated with the data lake. There are three popular open-source lakehouses at the present time: **Apache Hudi** (by Uber), **Apache Iceberg** (by Netflix), and **Delta Lake** (by Databricks). Although all of these lakehouses have the same objective of overcoming the pain points of data lakes, their unique features and distinct ways of doing things set them apart from one another.
 
 # A brief introduction to lakehouse and why it emerged as a modern data lake
 
@@ -34,7 +35,7 @@ A data lake is a scalable storage and analysis system for data of any type, but 
   - **Lack of indexing**: Data lakes typically do not support traditional indexing in the same way that relational databases do.
   - **Metadata management**: Data lakes that grow to petabytes or more may become bottlenecked not by the data itself but by the metadata that is associated with it.
 
-Modern data lakes have emerged in response to these limitations and challenges. The modern data lake is known as a **lakehouse**, which has chosen a hybrid architecture that combines the best aspects of a data lake and a data warehouse, which were historically designed with different trade-offs in mind. Due to its transactional capabilities, the modern data lake is also referred to as a **transactional data lake**. The term "lakehouse" was popularized by Databricks, the company behind Apache Spark, with their open-source project called Delta Lake. There are three popular lakehouses at the present time: **Apache Hudi**, **Apache Iceberg**, and **Delta Lake**. Let's go over the key features of these lakehouses to find out which one is preferred over the others for specific use cases.
+Modern data lakes have emerged in response to the aforementioned limitations and challenges. The modern data lake is known as a **lakehouse**, which has chosen a hybrid architecture that combines the best aspects of a data lake and a data warehouse, which were historically designed with different trade-offs in mind. Due to its transactional capabilities, the modern data lake is also referred to as a **transactional data lake**. The term "lakehouse" was popularized by Databricks, the company behind Apache Spark, with their open-source project called Delta Lake. There are three popular lakehouses at the present time: **Apache Hudi**, **Apache Iceberg**, and **Delta Lake**. Let's go over the key features of these lakehouses to find out which one is preferred over the others for specific use cases.
 
 ## Apache Parquet is the primary and preferred storage file format for lakehouses
 
@@ -67,7 +68,7 @@ Let's check out how each lakehouse architecture handles updates and deletes usin
 
 ### Copy-on-Write (CoW)
 
-Copy-on-Write (CoW) is a sort of optimized variant of the older method of performing delete and update operations in traditional data lakes. With Copy-on-Write datasets, each time there is an update to a record, the file that contains the record is rewritten into a *new version of the file* with the updated values. 
+Copy-on-Write (CoW) is a sort of optimized variant of the older method of performing delete and update operations in traditional data lakes. With Copy-on-Write datasets, each time there is an update to a record, the file that contains the record is rewritten into a *new version of the file* (new snapshot) with the updated values. The original data files remain immutable (unchanged). This ensures that the original data is preserved and can be accessed consistently, for example, through a time-travel query.
 
 |![Figure 1: Update on CoW table](/assets/images/posts/updates-on-cow-table.png){: width="100%" }|
 |:-:|
