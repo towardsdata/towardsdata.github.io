@@ -11,7 +11,7 @@ date: 2023-10-20 00:000:00 +0530
 tags: [ "lakehouses", "transactionsl-data-lake", "delta-lake", "lakehouse" ]
 categories: lakehouse
 featured: false
-hidden: false
+hidden: true
 draft: true
 ---
 
@@ -50,7 +50,7 @@ Lakehouses have chosen **Apache Parquet** as their preferred and primary storage
 
 Due to the increasing popularity of the lakehouse, there is a growing need and interest in comparing these open-source lakehouse projects. There are a number of good lakehouse comparison studies and benchmarking blog posts that cover all aspects of features, but in this post, I cover the most essential features and provide statistics.
 
-It is crucial to keep in mind that no single lakehouse is invariably superior in every way and may possibly take over the others. Each lakehouse has its own strengths and weaknesses due to the fact that it evolved over different time periods and had varying goals while addressing the primary pain points of the data lake. The choice between these lake residences must be based on our specific use cases and requirements.
+It is crucial to keep in mind that no single lakehouse is invariably superior in every way and may possibly take over the others. Each lakehouse has its own strengths and weaknesses due to the fact that it evolved over different time periods and had varying goals while addressing the primary pain points of the data lake. The choice between these lakehouses must be based on our specific use cases and requirements.
 
 Note that not only does each lakehouse have unique features, but it also does things uniquely. The unique features and unique way of doing things set Lakehouses apart from one another. In the current data landscape, lakehouses are emerging rapidly, and each developer community is working hard to fill in the gaps and introduce new capabilities down the line. Therefore, the one (lakehouse) who lacks specific features today could thrive with the addition of new abilities and take the lead tomorrow. Having said that, we must keep a close watch on the trends that influence these lake residences.
 
@@ -74,7 +74,7 @@ Copy-on-Write (CoW) is a sort of optimized variant of the older method of perfor
 |:-:|
 |<sup>*Figure 1: Update on CoW table.*</sup>|<br/><br/>
 
-Updates may affect more than one underlying data file, so the Copy-on-Write (CoW) mechanism typically creates multiple new delta files during a write operatione. Note that more updates result in more versioned Parquet files.
+Updates may affect more than one underlying data file, so the Copy-on-Write (CoW) mechanism typically creates multiple new delta files during a write operation. Note that more updates result in more versioned Parquet files.
 
 The underlying table data is physically stored as individual files, which are often grouped into *partitions* (directories) using date-time or other partitioning methods. At a high level, this is how updates work on CoW data files: Apache Hudi locates the impacted files in each partition using one of the indexing techniques, then reads them completely, updates them with new values in memory, and finally writes to disk and creates new files.
 
@@ -83,6 +83,69 @@ Since pictures speak louder than words, I’ve illustrated below how Copy-on-Wri
 |![Figure 2: Copy-on-Write - How it works with a series of commits](/assets/images/posts/lakehouse-cow-how-it-works-illustration.png){: width="100%" }|
 |:-:|
 |<sup>*Figure 2: Copy-on-Write - How it works with a series of commits.*</sup>|<br/><br/>
+
+#### Copy-on-Write in action
+
+Let's look at how Copy-on-Write tables work in all these lakehouses. First, let's create an employee table with partitions by department column in each of the lakehouse formats.
+
+##### CoW on Apache Hudi
+
+Here, Apache Spark version 3.4 and Apache Hudi version 0.14.0 are used.
+
+```bash
+tableName = "emp_cow_hudi"
+basePath = "file:///tmp/emp_cow_hudi"
+
+partitionField = "department"
+recordKey = "id"
+precombineField = "modified_on"
+writeOperation = "bulk_insert"
+
+columns = ["id", "name", "age", "sex", "salary", "department", "created_on", "modified_on"]
+data = [
+  (1695159649087, "Emily Johnson", 30, "Female", 2600, "data engineering", "2023-10-26 15:30:00", "2023-10-26 15:30:00"),
+  (1695091554788, "Michael Davis", 32, "Male", 2300,"data science", "2023-10-26 15:30:00", "2023-10-26 15:30:00"),
+  (1695046462179, "David Brown", 28, 1800, "Male ", "business analyst", "2023-10-26 15:30:00", "2023-10-26 15:30:00"),
+  (1695516137016, "Sarah Jackson", 29, 1700, "Female", "business analyst", "2023-10-26 15:30:00", "2023-10-26 15:30:00"),
+  (1695115999911, "Robert Young", 30, 2500, "Male", "data engineering", "2023-10-26 15:30:00", "2023-10-26 15:30:00"),
+]
+
+inserts = spark.createDataFrame(data).toDF(*columns)
+
+hudi_options = {
+  "hoodie.table.name": tableName,  # It's required property
+  "hoodie.datasource.write.table.name": tableName,
+  "hoodie.datasource.write.recordkey.field": recordKey,
+  "hoodie.datasource.write.partitionpath.field": partitionField,
+  "hoodie.datasource.write.precombine.field": precombineField,
+  "hoodie.datasource.write.operation": writeOperation
+}
+
+df.write \
+  .format("hudi") \
+  .options(**hudi_options) \
+  .mode("overwrite") \
+  .save(basePath)
+```
+
+With the above code, we have created a Hudi table, as shown below:
+
+```bash
+./emp_cow_hudi
+├── business analyst
+│   ├── 23ba563c-309f-4f09-b345-c6edabfcad57-0_9-29-0_20231029102609167.parquet
+│   └── 29a31893-2e00-4188-8f14-643e9bd9fb5f-0_7-27-0_20231029102609167.parquet
+├── data engineering
+│   ├── 4e8c2201-c818-4660-a839-3d2d0499f493-0_2-22-0_20231029102609167.parquet
+│   └── d3929036-5b9a-4bac-a758-81ea731b48ac-0_11-31-0_20231029102609167.parquet
+└── data science
+    └── 7750b16f-fe6a-43d3-a53a-d6c4d5520e75-0_4-24-0_20231029102609167.parquet
+```
+
+##### CoW on Apache Delta Lake
+
+##### CoW on Apache Iceberg
+
 
 #### Advantages and disadvantages of CoW
 
@@ -94,7 +157,7 @@ Since pictures speak louder than words, I’ve illustrated below how Copy-on-Wri
 ##### Disadvantages of CoW
 
 - Write cost and write latency are higher. 
-- Higher write amplification in tandem with higher write latency - Write amplification is very high because it rewrites the whole dataset or partition. Increased write amplification brings higher lantency.
+- Higher write amplification in tandem with higher write latency - Write amplification is very high because it rewrites the whole dataset or partition. Increased write amplification brings higher latency.
 
 
 ### Merge-on-Read (MoR)
