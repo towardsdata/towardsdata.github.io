@@ -2,7 +2,7 @@
 layout: post
 title:  "Apache Pinot joins hands with Kafka and Presto to provide low-latency, high-throughput user-facing analytics"
 kicker: "APACHE PINOT"
-subtitle: "Apache Pinot is a real-time, distributed OLAP datastore that was built for low-latency, high-throughput analytics, making it perfect for user-facing analytical workloads. Pinot joins hands with Kafka and Presto to provide user-facing analytics."
+summary: "Apache Pinot is a real-time, distributed OLAP datastore that was built for low-latency, high-throughput analytics, making it perfect for user-facing analytical workloads. Pinot joins hands with Kafka and Presto to provide user-facing analytics."
 image: assets/images/posts-cover-images/presto-pinot-kafka.png
 author: senthil
 date: 2022-11-15 00:00:00 +0530
@@ -24,7 +24,9 @@ In the past, analytics were often performed in batches, resulting in high-latenc
 
 ## Real-time analytics
 
-Real-time analytics has now become something that every business ought to do. It's the process of applying logic to data to get insights or draw conclusions *right away* so that better decisions can be made. "Real-time" in real-time analytics means being able to get business insights *as soon as possible* after data (transactions) enters the system. Having access to analytics in real-time is important for day-to-day operations, financial intelligence, triaging incidents, and allowing businesses to act quickly. The most crucial benefit of real-time analytics is that it allows us to take opportunities and stop problems before they happen.
+Real-time analytics has now become something that every business ought to do. It's the process of applying logic to data to get insights or draw conclusions *right away* so that better decisions can be made at the right time. Put simply, it aids in helping us make the *right decisions at the right time*. 
+
+"Real-time" in real-time analytics means being able to get business insights *as soon as possible* after data (transactions) enters the system. Having access to analytics in real-time is important for day-to-day operations, financial intelligence, triaging incidents, and allowing businesses to act quickly. The most crucial benefit of real-time analytics is that it allows us to take opportunities and stop problems before they happen.
 
 ## User-facing analytics
 
@@ -32,9 +34,12 @@ In the world we live in now, everyone needs real-time analytical data, not just 
 
 In user-facing analytics, users won't put up with painfully slow analytics. When they can find insights in real-time, they are more open to a data-driven culture. So, we need a solution that can scale to millions of users and offer fast, real-time insights. Businesses are working hard to speed up the steps needed to get enough data to answer everyone's questions. One such solution that comes to our rescue is "**Apache Pinot**."
 
-|![The Evolution of Analytics](/assets/images/posts/batch-analytics-to-user-facing-analytics.png)|
-|:-:|
-|<sup>*Figure 1: The Evolution of Analytics.*</sup>|<br/><br/>|
+<p align="center">
+  <img src="/assets/images/posts/batch-analytics-to-user-facing-analytics.png" alt="The Evolution of Analytics" title="Created by Author" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 1</b>: The Evolution of Analytics.</sup>
+</p>
 
 ---
 
@@ -52,9 +57,12 @@ One of the best things about Pinot is that it has a pluggable architecture. The 
 - `pinot-s3`
 - `pinot-parquet`
 
-|![Apache Pinot Overview](/assets/images/posts/pinot-overview.png)|
-|:-:|
-|<sup>*Figure 2: Apache Pinot Overview. Image Courtesy: https://docs.pinot.apache.org.*</sup>|<br/><br/>|
+<p align="center">
+  <img src="/assets/images/posts/pinot-overview.png" alt="Apache Pinot Overview" title="Apache Pinot Overview" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 2</b>: Apache Pinot Overview. Image Courtesy: https://docs.pinot.apache.org.</sup>
+</p>
 
 ---
 
@@ -68,9 +76,12 @@ Presto and Pinot are distinct technologies, yet they complement each other quite
 
 > **Second-level data freshness:** Second-level data freshness is the amount of time between when the organisation gets the data and when it can be used for in-depth analytics.
 
-|![Pinot vs. Presto](/assets/images/posts/pinot-vs-presto.png)|
-|:-:|
-|<sup>*Figure 3: Pinot vs. Presto.*</sup>|<br/><br/>|
+<p align="center">
+  <img src="/assets/images/posts/pinot-vs-presto.png" alt="Pinot vs. Presto" title="Created by Author" style="width:80%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 3</b>: Pinot vs. Presto.</sup>
+</p>
 
 ## Need for Kafka
 
@@ -82,9 +93,12 @@ In the following sections, we will go over how Pinot leverages Kafka and Presto,
 
 # Taking a closer look into Pinot and its components
 
-|![Pinot Architecture](/assets/images/posts/apache-pinot-architecture.png)|
-|:-:|
-|<sup>*Figure 4: Pinot Architecture.*</sup>|<br/><br/>|
+<p align="center">
+  <img src="/assets/images/posts/apache-pinot-architecture.png" alt="Pinot Architecture" title="Created by Author" style="width:80%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 4</b>: Pinot Architecture.</sup>
+</p>
 
 Pinot has two kinds of components: 
 
@@ -101,9 +115,12 @@ Pinot cluster has the following logical components:
 
 A logical view is another way to see what the cluster looks like:
 
-|![Pinot Cluster's Logical View](/assets/images/posts/apache-pinot-cluster-logical-view.png)|
-|:-:|
-|<sup>*Figure 5: Pinot Cluster's Logical View.*</sup>|<br/><br/>|
+<p align="center">
+  <img src="/assets/images/posts/apache-pinot-cluster-logical-view.png" alt="Pinot Cluster's Logical View" title="Created by Author" style="width:60%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 5</b>: Pinot Cluster's Logical View.</sup>
+</p>
 
 - A cluster contains tenants
 - Tenants contain tables
@@ -157,9 +174,13 @@ The criteria used for creating immutable segments can either be:
 
 A table is represented as a [**Helix resource**](https://helix.apache.org/Concepts.html){:target="_blank"} in the Pinot cluster, and each segment of a table is represented as a [**Helix Partition**](https://helix.apache.org/Concepts.html){:target="_blank"}.
 
-|![Tenant -> Tables -> Segments](/assets/images/posts/apache-pinot-tenant-table-segment.png)|
-|:-:|
-|<sup>*Figure 6: Tenant -> Tables -> Segments.*</sup>|<br/><br/>|
+<p align="center">
+  <img src="/assets/images/posts/apache-pinot-tenant-table-segment.png" alt="Tenant -> Tables -> Segments" title="Created by Author" style="width:70%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 6</b>: Tenant -> Tables -> Segments.</sup>
+</p>
+
 
 ## Architectural components
 
@@ -185,25 +206,34 @@ There are two types of servers:
 
 Offline servers download segments from the segment store so that they can host and serve queries. When a new segment is uploaded to the controller, the controller decides which servers will host the new segment and notifies them to download the segment from the segment store. When the servers get this notification, they download the segment file and put the segment on the server so that they can handle queries.
 
-|![Offline Server shows Batch Ingestion](/assets/images/posts/apache-pinot-batch-ingestion.png)|
-|:-:|
-|<sup>*Figure 7: Offline Server shows Batch Ingestion.*</sup>|<br/><br/>|
+<p align="center">
+  <img src="/assets/images/posts/apache-pinot-batch-ingestion.png" alt="Offline Server shows Batch Ingestion" title="Created by Author" style="width:80%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 7</b>: Offline Server shows Batch Ingestion.</sup>
+</p>
 
 #### Real-time server
 
 Real-time servers ingest directly from a real-time stream like Kafka. Based on certain thresholds, they make segments of the data that has been stored in-memory from time to time. Then, this segment is saved to the segment store.
 
-|![Real-time Ingestion](/assets/images/posts/apache-pinot-realtime-ingestion.png)|
-|:-:|
-|<sup>*Figure 8: Real-time Ingestion.*</sup>|<br/><br/>|
+<p align="center">
+  <img src="/assets/images/posts/apache-pinot-realtime-ingestion.png" alt="Real-time Ingestion" title="Created by Author" style="width:80%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 8</b>: Real-time Ingestion.</sup>
+</p>
 
 ### Broker
 
 Broker handles Pinot queries. They accept queries from clients and forward them to the right Pinot servers. They gather results from the servers and combine them into a single response to send back to the client.
 
-|![Broker interaction with other components](/assets/images/posts/apache-pinot-broker-interactions.png)|
-|:-:|
-|<sup>*Figure 9: Broker interaction with other components.*</sup>|<br/><br/>|
+<p align="center">
+  <img src="/assets/images/posts/apache-pinot-broker-interactions.png" alt="Broker interaction with other components" title="Created by Author" style="width:80%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 9</b>: Broker interaction with other components.</sup>
+</p>
 
 ### Controller
 

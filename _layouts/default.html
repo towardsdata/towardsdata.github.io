@@ -33,7 +33,44 @@
 {% endif %}
 
 {% capture layout %}{% if page.layout %}layout-{{ page.layout }}{% endif %}{% endcapture %}
-<body>
+<body class="line-numbers">
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="outer site-nav-main">
+                <div class="inner">
+                    <nav class="site-nav">
+                        <div class="site-nav-left-wrapper">
+                            <div class="site-nav-left">
+                                <!-- Site Logo/Name -->
+                                <a class="navbar-brand" href="{{ site.baseurl }}/">
+                                    <img src="{{ site.baseurl }}/{{ site.logo }}" alt="{{ site.name }}">
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="https://twitter.com/thoughtfulwx" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-x-twitter"></i>
+                                    </span>
+                                </a>
+                                <a href="https://www.instagram.com/thoughtful.works/" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-square-instagram"></i>
+                                    </span>
+                                </a> 
+                                <a href="https://github.com/thoughtfulworks?tab=repositories" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </a>
+                                <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
+                                {% include search-lunr.html %}
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+
 	<!-- defer loading of font and font awesome -->
 	<noscript id="deferred-styles">
 		<link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
@@ -54,52 +91,18 @@
     <nav id="menu">
         <ul>
             <h4>Navigation</h4>
-            <!--<li><a href="{{ site.baseurl }}/">Home</a></li>-->
             <li><a href="{{ site.baseurl }}/tags">Tags</a></li>
-            <li><a href="{{ site.baseurl }}/about">About</a></li>
-            <!--<li><a href="{{ site.baseurl }}/authors">Contributors <span class="badge badge-primary">new</span></a></li>-->
+            <li><a href="{{ site.baseurl }}/about">About us</a></li>
             <li><a href="{{ site.baseurl }}/authors">Contributors</a></li>
             <li><a href="{{ site.baseurl }}/contact">Contact us</a></li>       
         </ul>   
     </nav>
 
-    {% include search-lunr.html %}
     <!-- End Sidebar Navigation -->
 
     <div class="site-content {% if page.url == '/' %} firstpage {% endif %}">
 
     <div class="container">
-        <!-- Site Logo/Name -->
-        <a class="navbar-brand" href="{{ site.baseurl }}/">
-            <img src="{{ site.baseurl }}/{{ site.logo }}" alt="{{ site.name }}">
-        </a>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="https://fosstodon.org/@towardsdata" target="_blank" style="text-decoration: none;">
-            <span style="color:#616A6B; font-size: 25px;">
-                <i class="fa-brands fa-mastodon"></i>
-            </span>
-        </a>
-        &nbsp;&nbsp;
-        <a href="https://twitter.com/towardsdata" target="_blank" style="text-decoration: none;">
-            <span style="color:#616A6B; font-size: 25px;">
-                <i class="fa-brands fa-x-twitter"></i>
-            </span>
-        </a>
-        &nbsp;&nbsp;
-        <a href="https://www.instagram.com/towardsdata" target="_blank" style="text-decoration: none;">
-            <span style="color:#616A6B; font-size: 25px;">
-                <i class="fa-brands fa-square-instagram"></i>
-            </span>
-        </a> 
-        <hr class="grey_line"></hr>
-
-        <!-- Site Tag or Title -->
-        <!--{% if page.url == '/' %}
-            <p class="sitetag">
-                {{ site.description }}
-            </p>
-        {% endif %}-->
-        
         <!-- Content -->
         <div class="main-content">
             {{ content }}
@@ -128,7 +131,7 @@
                     Copyright © {{ site.time | date: "%Y" }} <b>{{ site.name }}</b> | <a href="{{ site.baseurl }}/privacy-policy.html">Privacy Policy</a> | Made with <b>Jekyll</b> and hosted on <b>GitHub Pages</b> | This website DOES NOT use cookies.
                 </div>
                 <div class="col-md-6 col-sm-12 text-center text-lg-right">    
-                    The vector graphics used here are designed by <a target="_blank" href="https://www.freepik.com">Freepik</a>.
+                    <!-- The vector graphics used here are designed by <a target="_blank" href="https://www.freepik.com">Freepik</a>. -->
                 </div>
             </div>
         </div>

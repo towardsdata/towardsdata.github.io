@@ -21,10 +21,11 @@ authors:
     gravatar: 6fc127cda8cd99830932538a58dc6173
     email: "hello@senthilnayagan.com"
     web: https://senthilnayagan.com/
+    linkedin: https://www.linkedin.com/in/senthilnayagan
     twitter: https://twitter.com/SenthilNayagan
     mastodon: https://fosstodon.org/@towardsdata
     instagram: https://www.instagram.com/senthilnayagan
-    description: "I am a Data Engineer by profession and a Rustacean by interest. Founder and Content Creator, <a href='https://towardsdata.dev' target='_blank'>towardsdata.dev</a>."
+    description: "I am a Data Engineer by profession and a Rustacean by interest. Lead Author and Content Creator: <a href='https://towardsdata.dev' target='_blank'>towardsdata.dev</a>, <a href='https://thoughtfulworks.dev' target='_blank'>thoughtfulworks.dev</a>, and <a href='https://rustinaction.dev' target='_blank'>rustinaction.dev</a>."
 
 # Plugins
 plugins:

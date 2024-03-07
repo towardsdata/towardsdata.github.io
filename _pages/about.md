@@ -22,7 +22,7 @@ Feel free to get in [touch]({{ site.baseurl }}/contact) with us if you like read
 Happy learning!
 
 **Senthil Nayagan**<br/>
-<sup>Founder and Content Creator, **towardsdata.dev**.</sup>
+<sup>**Lead Author and Content Creator**: [thoughtfulworks.dev](https://thoughtfulworks.dev/){:target="_blank"}, [towardsdata.dev](https://towardsdata.dev/){:target="_blank"}, and [rustinaction.dev](https://rustinaction.dev/){:target="_blank"}.</sup>
 
 **Email:** [hello@towardsdata.dev](mailto:hello@towardsdata.dev)<br/>
 **Twitter:** [towardsdata](https://twitter.com/towardsdata){:target="_blank"}<br/>

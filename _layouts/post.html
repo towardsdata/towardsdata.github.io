@@ -9,7 +9,9 @@ post_class: post-template
     <!-- Kicker -->
     {% if page.kicker %}
         <!--<h6 class="kicker">{{ page.kicker }}</h6>-->
-        <a class="smoothscroll" href="{{ site.baseurl }}/categories#{{ page.kicker | downcase | replace: " ","-" }}"><h6 class="kicker">{{ page.kicker }}</h6></a>
+        <span class="kicker">
+            <a href="{{ site.baseurl }}/categories#{{ page.kicker | downcase | replace: " ","-" }}">{{ page.kicker }}</a>
+        </span>
     {% endif %}
 
     <!-- Post Title -->
@@ -27,46 +29,56 @@ post_class: post-template
                 {% endif %}
             </div>            
             <div>
-                <b>{{ author.display_name }}</b>
+                {% if author.linkedin %}
+                    <!-- <a target="_blank" href="{{ author.linkedin }}" style="color: black; border-bottom: 1px solid blue;"><b>{{ author.display_name }}</b></a> -->
+                    <span class="author-name">
+                        <a target="_blank" href="{{ author.linkedin }}">{{ author.display_name }}</a>
+                    </span>
+                {% else %}
+                    {{ author.display_name }}
+                {% endif %}
                 {% if author.web %}
-                    &nbsp;
-                    <a target="_blank" href="{{ author.web }}" style="text-decoration: none;">
-                        <span style="color: #616A6B;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="{{ author.web }}">
                             <i class="fa-solid fa-window-maximize"></i>
-                        </span>                        
-                    </a>
+                        </a>
+                    </span> 
                 {% endif %}                     
                 {% if author.mastodon %}
                     &nbsp;
-                    <a target="_blank" href="{{ author.mastodon }}" style="text-decoration: none;">
-                        <span style="color: #616A6B;">
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="{{ author.mastodon }}">
                             <i class="fa-brands fa-mastodon"></i>
-                        </span>                         
-                    </a>                
+                        </a>                         
+                    </span>
                 {% endif %}                
                 {% if author.twitter %}
                     &nbsp;
-                    <a target="_blank" href="{{ author.twitter }}" style="text-decoration: none;">
-                        <span style="color: #616A6B;">
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="{{ author.twitter }}">
                             <i class="fa-brands fa-x-twitter"></i>
-                        </span>
-                    </a>                
+                        </a>                         
+                    </span>                    
                 {% endif %}
                 {% if author.instagram %}
                     &nbsp;
-                    <a target="_blank" href="{{ author.instagram }}" style="text-decoration: none;">
-                        <span style="color: #616A6B;">
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="{{ author.instagram }}">
                             <i class="fa-brands fa-square-instagram"></i>
-                        </span>
-                    </a>                
+                        </a>                         
+                    </span>                    
                 {% endif %}                                   
                 <br/> 
-                <span class="post-date"><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time></span>           
-                {% if page.last_modified_at %}
-                    (Updated: <time datetime="{{ page.last_modified_at | date_to_xmlschema }}" itemprop="dateModified">{{ page.last_modified_at | date: "%b %-d, %Y" }}</time>)
-                {% endif %}
-                {% assign words = content | number_of_words %}
-                &nbsp;-&nbsp;{{ words | divided_by:180 }} Mins Read
+                <span class="post-date-and-mins-read">           
+                    {% if page.last_modified_at %}
+                        <i class="fa-regular fa-calendar-days"></i>&nbsp;Updated: <time datetime="{{ page.last_modified_at | date_to_xmlschema }}" itemprop="dateModified">{{ page.last_modified_at | date: "%b %-d, %Y" }}</time>
+                    {% else %}
+                        <i class="fa-regular fa-calendar-days"></i>&nbsp;<time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
+                    {% endif %}
+                    {% assign words = content | number_of_words %}
+                    -&nbsp;<i class="fa-solid fa-clock"></i>&nbsp;{{ words | divided_by:180 }} Mins Read
+                </span>
             </div>            
         </div>
     {% endif %}
@@ -86,22 +98,33 @@ post_class: post-template
             <a class="smoothscroll" href="{{ site.baseurl }}/tags#{{ tag | replace: " ","-" }}">{{ tag }}</a>
         </li>
         {% endfor %}
-    </ul>                    
+    </ul>
 </div>
 
-<!-- Subtitle -->
-<div class="article-post">
-    {% if page.subtitle %}
+<!-- Summary -->
+<div class="summary">
+    {% if page.summary %}
         <p></p>
-        <span style="font-weight: 50;">{{ page.subtitle }}</span>
+        <span style="font-weight: 50;">{{ page.summary }}</span>
     {% endif %}
     <hr class="grey_line"></hr>
 </div>
 
 <!-- Draft - Shows writing in progress -->
-<div class="article-post">
+<div class="draft">
     {% if page.draft %}
-        <span style="font-size: 90%; color:#CB4335;"><b>Writing in progress:</b> If you have any suggestions for improving the content or notice any inaccuracies, please email us at <a href="mailto:hello@towardsdata.dev">hello@towardsdata.dev</a>. Thanks!</span>        
+        <div class="row" style="padding: 0; margin: 0;">
+            <div class="col-md-1" style="padding: 5px; margin: 0;">
+                <span class="icon">
+                    <img src="{{site.baseurl}}/assets/images/icons/work-in-progress.png" alt="Work in progress">
+                </span>
+            </div>
+            <div class="col-md-11 align-self-center" style="padding: 5px; margin: 0;">
+                <span>
+                    If you have any suggestions for improving the content or notice any inaccuracies, please email us at <a href="mailto:{{ site.email }}">{{ site.email }}</a>. Thanks!
+                </span>
+            </div>
+        </div>
     {% endif %}
 </div>
 
