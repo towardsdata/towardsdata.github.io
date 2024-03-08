@@ -11,7 +11,7 @@ date: 2023-09-03 00:000:00 +0530
 tags: [ "sdlc", "version control", "yanked", "yanked-release" ]
 categories: sdlc
 featured: false
-hidden: false
+hidden: true
 ---
 
 # What does "yanked" release mean?

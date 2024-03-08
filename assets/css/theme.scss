@@ -256,8 +256,9 @@ img, img:hover {
 }
 
 // Menu
+// Logo
 .navbar-brand img {
-    max-height: 50px;
+    max-height: 120px;
 }
 .sidebar {
     position: fixed;
@@ -1029,8 +1030,10 @@ ul.tags li a:hover {
     right: 0;
     left: 0;
     z-index: 1000;
-    background: #f2f2f2;
-    border-bottom: solid #e3e3e3 1px;
+    // background: #f2f2f2;
+    // background: #081736;
+    background: #0c2957;
+    border-bottom: solid #f2f2f2 1px;
 }
 
 .outer {
@@ -1052,7 +1055,7 @@ ul.tags li a:hover {
     justify-content: space-between;
     align-items: flex-start;
     overflow: hidden;
-    height: 70px;
+    height: 80px;
     font-size: 1.3rem;
     align-items: center;
 }
